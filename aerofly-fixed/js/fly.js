@@ -1,26 +1,8 @@
 /* =================================================================
    AeroFly — fly.js
-   All interactivity for the main flight booking page (index.html)
+   Interactivity for the Flights page (pages/aerofly.html).
+   Requires: global.js (already loaded first)
 ================================================================= */
-
-
-/* -----------------------------------------------------------------
-   NAV — hamburger dropdown
------------------------------------------------------------------ */
-const menuToggle  = document.getElementById('menuToggle');
-const navDropdown = document.getElementById('navDropdown');
-
-menuToggle.addEventListener('click', e => {
-  e.stopPropagation();
-  navDropdown.classList.toggle('active');
-});
-
-document.addEventListener('click', () => {
-  navDropdown.classList.remove('active');
-  closeDatePicker();
-  closeTravelersPicker();
-});
-
 
 /* -----------------------------------------------------------------
    DATE PICKER
