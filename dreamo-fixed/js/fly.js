@@ -980,3 +980,48 @@ function initFlightsFromURL() {
 
 // Run this immediately on load
 initFlightsFromURL();
+
+/* -----------------------------------------------------------------
+   SEARCH PILL — re-search from results page
+----------------------------------------------------------------- */
+(function wireSearchPillBtn() {
+  const btn = document.querySelector('.search-pill-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    const fromEl = document.querySelector('#seg-from .seg-display');
+    const toEl   = document.querySelector('#seg-to .seg-display');
+    const from   = fromEl ? fromEl.textContent.trim() : '';
+    const to     = toEl   ? toEl.textContent.trim()   : '';
+    const dates  = document.getElementById('dates-display');
+    const trav   = document.getElementById('travelers-display');
+
+    // Parse dates back to ISO if possible
+    let depart = '', ret = '';
+    if (dpStart) depart = dpStart.toISOString().slice(0, 10);
+    if (dpEnd)   ret    = dpEnd.toISOString().slice(0, 10);
+
+    // Parse pax from display
+    const travText = trav ? trav.textContent : '1 Adult · Economy';
+    const adults   = (travText.match(/(\d+)\s*Adult/) || [0, 1])[1];
+    const children = (travText.match(/(\d+)\s*Child/)  || [0, 0])[1];
+    const infants  = (travText.match(/(\d+)\s*Infant/) || [0, 0])[1];
+    const cls      = (travText.split('·')[1] || 'Economy').trim().toLowerCase();
+    const pax      = `${adults}a${children}c${infants}i`;
+
+    const params = new URLSearchParams({ from, to, depart, return: ret, pax, class: cls });
+    window.location.href = `aerofly.html?${params}`;
+  });
+
+  // Make seg-from and seg-to inline-editable
+  ['seg-from', 'seg-to'].forEach(id => {
+    const seg = document.getElementById(id);
+    if (!seg) return;
+    const display = seg.querySelector('.seg-display');
+    if (!display) return;
+    display.setAttribute('contenteditable', 'true');
+    display.style.outline = 'none';
+    display.style.cursor = 'text';
+    display.addEventListener('focus', () => seg.style.boxShadow = '0 0 0 2px var(--gemini-purple, #9B72CB)');
+    display.addEventListener('blur',  () => seg.style.boxShadow = '');
+  });
+})();

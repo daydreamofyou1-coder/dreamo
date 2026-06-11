@@ -1032,8 +1032,7 @@ function initHotelsFromURL() {
   const roomsStr = params.get('rooms');
 
   // 1. Update Destination
-  // Selects the first .sb-val which corresponds to the Destination field
-  const destField = document.querySelectorAll('.sb-val')[0];
+  const destField = document.getElementById('sb-dest-val');
   if (destField) destField.textContent = dest;
 
   // 2. Format and Update Dates
@@ -1055,3 +1054,40 @@ function initHotelsFromURL() {
 
 // Run this immediately on load
 initHotelsFromURL();
+
+/* -----------------------------------------------------------------
+   SEARCH BUTTON — re-search from results page
+----------------------------------------------------------------- */
+(function wireHotelSearchBtn() {
+  const btn = document.querySelector('.sb-search-btn');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    const destEl    = document.getElementById('sb-dest-val');
+    const datesEl   = document.getElementById('sb-dates-val');
+    const guestsEl  = document.getElementById('sb-guests-val');
+
+    const dest      = destEl   ? destEl.textContent.trim()   : '';
+    const datesText = datesEl  ? datesEl.textContent.trim()  : '';
+    const guestText = guestsEl ? guestsEl.textContent.trim() : '';
+
+    // Try to pass ISO dates from dpStart/dpEnd if available
+    let checkin = '', checkout = '';
+    if (typeof dpStart !== 'undefined' && dpStart) checkin  = dpStart.toISOString().slice(0, 10);
+    if (typeof dpEnd   !== 'undefined' && dpEnd)   checkout = dpEnd.toISOString().slice(0, 10);
+
+    const parts   = guestText.split('·');
+    const guests  = (parts[0] || '2 guests').trim();
+    const rooms   = (parts[1] || '1 room').trim();
+
+    const params = new URLSearchParams({ dest, checkin, checkout, guests, rooms });
+    window.location.href = `aerohotel.html?${params}`;
+  });
+
+  // Make destination field inline-editable
+  const destField = document.getElementById('sb-dest-val');
+  if (destField) {
+    destField.setAttribute('contenteditable', 'true');
+    destField.style.outline = 'none';
+    destField.style.cursor  = 'text';
+  }
+})();
