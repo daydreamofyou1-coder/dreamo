@@ -735,7 +735,8 @@ function searchFlights() {
 
   // Pass search state as URL params so the flights page can pick them up
   const params = new URLSearchParams({ from, to, depart, return: ret, pax, class: cls });
-  window.location.href = `pages/aerofly.html?${params}`;
+  window.location.href = `dreamo/dreamo-fixed/pages
+/pages/aerofly.html?${params}`;
 }
 
 // ── Navigate to hotels page ────────────────────────────────────
@@ -747,7 +748,8 @@ function searchHotels() {
   const rooms    = document.getElementById('h-rooms').value;
 
   const params = new URLSearchParams({ dest, checkin, checkout, guests, rooms });
-  window.location.href = `pages/aerohotel.html?${params}`;
+  window.location.href = `dreamo-fixed/pages
+pages/aerohotel.html?${params}`;
 }
 </script>
 </body>
