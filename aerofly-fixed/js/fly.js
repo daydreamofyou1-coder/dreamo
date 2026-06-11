@@ -927,3 +927,56 @@ function initAnimatedGlobe() {
 ----------------------------------------------------------------- */
 renderFlights();
 initAnimatedGlobe();
+
+/* -----------------------------------------------------------------
+   URL PARAMETER PARSING (The Bridge from Index)
+----------------------------------------------------------------- */
+function initFlightsFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('from')) return; // If no search params, skip and use defaults
+
+  const from = params.get('from');
+  const to = params.get('to');
+  const depart = params.get('depart');
+  const ret = params.get('return');
+  const pax = params.get('pax'); // e.g., "1a0c0i"
+  const cls = params.get('class');
+
+  // 1. Update From / To
+  document.querySelector('#seg-from .seg-display').textContent = from;
+  document.querySelector('#seg-to .seg-display').textContent = to;
+
+  // 2. Format and Update Dates
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${d.getDate()} ${months[d.getMonth()]}`;
+  };
+  const dateTxt = ret ? `${formatDate(depart)} – ${formatDate(ret)}` : formatDate(depart);
+  document.getElementById('dates-display').textContent = dateTxt;
+
+  // 3. Parse and Update Travelers
+  let paxTxt = "1 Adult";
+  if (pax) {
+    const adults = parseInt(pax.match(/(\d+)a/)?.[1] || 1);
+    const children = parseInt(pax.match(/(\d+)c/)?.[1] || 0);
+    const infants = parseInt(pax.match(/(\d+)i/)?.[1] || 0);
+    const parts = [];
+    if (adults) parts.push(`${adults} Adult${adults > 1 ? 's' : ''}`);
+    if (children) parts.push(`${children} Child${children > 1 ? 'ren' : ''}`);
+    if (infants) parts.push(`${infants} Infant${infants > 1 ? 's' : ''}`);
+    paxTxt = parts.join(', ');
+  }
+  const clsDisplay = cls ? cls.charAt(0).toUpperCase() + cls.slice(1) : 'Economy';
+  document.getElementById('travelers-display').textContent = `${paxTxt} · ${clsDisplay}`;
+
+  // 4. Update the Results Header
+  const header = document.getElementById('results-header');
+  if (header) {
+    header.innerHTML = `<span>${from.toUpperCase()} <i class="fa-solid fa-arrow-right" style="font-size:.8em;margin:0 4px"></i> ${to.toUpperCase()}</span> | ${dateTxt} | <span id="results-traveler-summary">${paxTxt}</span>`;
+  }
+}
+
+// Run this immediately on load
+initFlightsFromURL();
