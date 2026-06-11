@@ -1017,3 +1017,41 @@ document.addEventListener('click', e => {
 renderHotels();
 window.addEventListener('load', () => { initMap(); });
 setTimeout(initMap, 100);
+
+/* -----------------------------------------------------------------
+   URL PARAMETER PARSING (The Bridge from Index)
+----------------------------------------------------------------- */
+function initHotelsFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.has('dest')) return; // If no search params, skip and use defaults
+
+  const dest = params.get('dest');
+  const checkin = params.get('checkin');
+  const checkout = params.get('checkout');
+  const guestsStr = params.get('guests');
+  const roomsStr = params.get('rooms');
+
+  // 1. Update Destination
+  // Selects the first .sb-val which corresponds to the Destination field
+  const destField = document.querySelectorAll('.sb-val')[0];
+  if (destField) destField.textContent = dest;
+
+  // 2. Format and Update Dates
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${d.getDate()} ${months[d.getMonth()]}`;
+  };
+  if (checkin && checkout) {
+     document.getElementById('sb-dates-val').textContent = `${formatDate(checkin)} – ${formatDate(checkout)}`;
+  }
+
+  // 3. Update Guests & Rooms
+  if (guestsStr && roomsStr) {
+     document.getElementById('sb-guests-val').textContent = `${guestsStr} · ${roomsStr}`;
+  }
+}
+
+// Run this immediately on load
+initHotelsFromURL();
