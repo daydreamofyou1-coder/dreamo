@@ -84,7 +84,7 @@
 
   <div class="sidebar">
     <div class="map-card">
-      <div class="map-title">Destination Map <span onclick="openFullMap()"><i class="fa-solid fa-expand"></i> Expand</span></div>
+      <div class="map-title">Destination Map <span onclick="openFullMap()" style="cursor:pointer; color:var(--purple);"><i class="fa-solid fa-expand"></i> Expand</span></div>
       <div class="map-area" id="map-area"><canvas id="map-canvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas></div>
       <div class="map-legend">
         <div class="map-leg-item"><div class="leg-dot" style="background:#3B6B9A"></div> Exceptional</div>
@@ -166,6 +166,22 @@
       <div class="dbs-btns"><button class="dbs-fav" onclick="toggleDmFav()"><i class="fa-regular fa-heart" id="dbs-fav-icon"></i> Save</button><button class="dbs-book" onclick="document.getElementById('dm-body').scrollTo({top:0, behavior:'smooth'})">Select a Room ↑</button></div>
     </div>
   </div>
+</div>
+
+<div id="full-map-overlay">
+  <button class="full-map-close" onclick="closeFullMap()"><i class="fa-solid fa-xmark"></i></button>
+  <div class="full-map-container">
+    <canvas id="full-map-canvas"></canvas>
+  </div>
+</div>
+
+<div id="elev-overlay"></div>
+
+<div id="reveal-overlay">
+  <canvas id="reveal-canvas"></canvas>
+  <div class="rv-dyn-text" id="rv-dyn-text"></div>
+  <button class="rv-cta" id="rv-cta" onclick="closeReveal()">✦ Explore Now</button>
+  <button class="rv-skip" id="rv-skip" onclick="closeReveal()">Skip <i class="fa-solid fa-forward-step" style="margin-left:4px"></i></button>
 </div>
 
 <script src="../js/global.js"></script>
