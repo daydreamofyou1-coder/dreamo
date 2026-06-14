@@ -82,12 +82,37 @@ header {
   border: 1px solid rgba(255,255,255,.1); border-radius: 28px;
   padding: 1.8rem; width: 100%; max-width: 860px;
   box-shadow: 0 32px 80px rgba(0,0,0,.4);
+  position: relative; overflow: hidden;
+}
+
+/* ✈️ Animated Airplane Background for Flights Tab */
+.bg-plane {
+  position: absolute;
+  top: 15%;
+  left: -20%;
+  width: 120px;
+  height: 120px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  filter: drop-shadow(0 0 15px rgba(66, 133, 244, 0.4));
+  transition: opacity 0.5s;
+}
+.search-card.mode-flights .bg-plane {
+  animation: flyBy 15s linear infinite;
+  opacity: 0.15;
+}
+@keyframes flyBy {
+  0% { transform: translate(0, 50px) rotate(15deg); }
+  50% { transform: translate(500px, -20px) rotate(10deg); }
+  100% { transform: translate(1000px, -80px) rotate(5deg); }
 }
 
 .mode-tabs {
   display: flex; gap: .4rem; margin-bottom: 1.6rem;
   background: rgba(255,255,255,.05); border-radius: 14px;
   padding: 4px; width: fit-content;
+  position: relative; z-index: 2;
 }
 .mode-tab {
   font-family: 'Outfit', sans-serif; font-size: .85rem; font-weight: 600;
@@ -98,11 +123,12 @@ header {
 .mode-tab.active { background: white; color: #0F172A; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
 .mode-tab:hover:not(.active) { color: rgba(255,255,255,.85); background: rgba(255,255,255,.08); }
 
-.search-panel { display: none; }
+.search-panel { display: none; position: relative; z-index: 2; }
 .search-panel.active { display: block; }
 
 .fields-row { display: grid; gap: .75rem; margin-bottom: .75rem; }
 .fields-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.fields-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
 .fields-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
 
 .field {
@@ -196,7 +222,7 @@ header {
 .trust-item i { color: rgba(255,255,255,.25); font-size: .85rem; }
 
 @media (max-width: 700px) {
-  .fields-row.cols-4 { grid-template-columns: 1fr 1fr; }
+  .fields-row.cols-4, .fields-row.cols-3 { grid-template-columns: 1fr 1fr; }
   .fields-row.cols-2 { grid-template-columns: 1fr; }
   .swap-wrap { flex-direction: column; }
   .swap-btn  { width: 100%; height: 40px; }
@@ -222,14 +248,14 @@ header {
       </div>
     </div>
     <div class="nav-dropdown" id="navDropdown">
-      <a href="https://daydreamofyou1-coder.github.io/dreamo/dreamo-fixed/pages/aerofly.html">
+      <a href="dreamo-fixed/pages/aerofly.html">
         <i class="fa-solid fa-plane-up" style="margin-right:8px;"></i> Flights
         <span class="nav-dot"></span>
       </a>
-      <a href="https://daydreamofyou1-coder.github.io/dreamo/dreamo-fixed/pages/aerohotel.html">
+      <a href="dreamo-fixed/pages/aerohotel.html">
         <i class="fa-solid fa-bed" style="margin-right:8px;"></i> Hotels
       </a>
-      <a href=https://daydreamofyou1-coder.github.io/dreamo/dreamo-fixed/pages/experiences.html">
+      <a href="dreamo-fixed/pages/experiences.html">
         <i class="fa-solid fa-compass" style="margin-right:8px;"></i> Experiences
       </a>
     </div>
@@ -249,7 +275,12 @@ header {
     <h1 class="hero-title">Travel <span class="grad">smarter,</span><br>fly further.</h1>
     <p class="hero-sub">Flights, hotels and experiences — search once and go.</p>
 
-    <div class="search-card">
+    <div class="search-card mode-flights" id="main-search-card">
+      
+      <svg class="bg-plane" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 16V14L13 9V3.5C13 2.67 12.33 2 11.5 2C10.67 2 10 2.67 10 3.5V9L2 14V16L10 13.5V19L8 20.5V22L11.5 21L15 22V20.5L13 19V13.5L21 16Z"/>
+      </svg>
+
       <div class="mode-tabs">
         <button class="mode-tab active" id="tab-flights" onclick="switchMode('flights')">
           <i class="fa-solid fa-plane-up"></i> Flights
@@ -257,9 +288,11 @@ header {
         <button class="mode-tab" id="tab-hotels" onclick="switchMode('hotels')">
           <i class="fa-solid fa-bed"></i> Hotels
         </button>
+        <button class="mode-tab" id="tab-exp" onclick="switchMode('exp')">
+          <i class="fa-solid fa-compass"></i> Experiences
+        </button>
       </div>
 
-      <!-- FLIGHTS PANEL -->
       <div class="search-panel active" id="panel-flights">
         <div class="trip-pills">
           <button class="trip-pill active" onclick="setTrip(this,'return')">Return</button>
@@ -335,7 +368,6 @@ header {
         </div>
       </div>
 
-      <!-- HOTELS PANEL -->
       <div class="search-panel" id="panel-hotels">
         <div class="fields-row cols-2" style="margin-bottom:.75rem;">
           <div class="field" style="grid-column:1/-1;">
@@ -378,6 +410,33 @@ header {
         </div>
       </div>
 
+      <div class="search-panel" id="panel-exp">
+        <div class="fields-row cols-3">
+          <div class="field">
+            <label>Location</label>
+            <input type="text" id="e-dest" placeholder="City or region" value="Tokyo">
+          </div>
+          <div class="field">
+            <label>When</label>
+            <input type="date" id="e-date">
+          </div>
+          <div class="field">
+            <label>Category</label>
+            <select id="e-cat">
+              <option value="all">All Experiences</option>
+              <option value="adventure">Adventure</option>
+              <option value="culture">Culture</option>
+              <option value="food">Food</option>
+            </select>
+          </div>
+        </div>
+        <div class="search-btn-row">
+          <button class="search-btn" onclick="searchExperiences()">
+            <i class="fa-solid fa-magnifying-glass"></i> Find Experiences
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -389,9 +448,9 @@ header {
   </div>
 </div>
 
-<script src="js/global.js"></script>
+<script src="dreamo-fixed/js/global.js"></script>
 <script>
-const BASE = 'https://daydreamofyou1-coder.github.io/dreamo/dreamo-fixed/pages';
+const BASE = 'dreamo-fixed/pages';
 
 (function buildStars() {
   const c = document.getElementById('stars');
@@ -408,10 +467,15 @@ const BASE = 'https://daydreamofyou1-coder.github.io/dreamo/dreamo-fixed/pages';
   const fmt = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
   const dep = new Date(); dep.setDate(dep.getDate()+14);
   const ret = new Date(); ret.setDate(ret.getDate()+25);
+  
+  // Flights
   document.getElementById('f-depart').value   = fmt(dep);
   document.getElementById('f-return').value   = fmt(ret);
+  // Hotels
   document.getElementById('h-checkin').value  = fmt(dep);
   document.getElementById('h-checkout').value = fmt(ret);
+  // Experiences
+  document.getElementById('e-date').value = fmt(dep);
 })();
 
 function switchMode(m) {
@@ -419,7 +483,16 @@ function switchMode(m) {
   document.querySelectorAll('.search-panel').forEach(p => p.classList.remove('active'));
   document.getElementById('tab-'+m).classList.add('active');
   document.getElementById('panel-'+m).classList.add('active');
+
+  // Control Airplane Animation class on the card
+  const card = document.getElementById('main-search-card');
+  if (m === 'flights') {
+    card.classList.add('mode-flights');
+  } else {
+    card.classList.remove('mode-flights');
+  }
 }
+
 function setTrip(el, type) {
   document.querySelectorAll('.trip-pill').forEach(p => p.classList.remove('active'));
   el.classList.add('active');
@@ -470,13 +543,11 @@ function searchHotels() {
   });
   window.location.href = `${BASE}/aerohotel.html?${params}`;
 }
-  function searchExperiences() {
+function searchExperiences() {
   const params = new URLSearchParams({
-    dest:     document.getElementById('h-dest').value.trim(),
-    checkin:  document.getElementById('h-checkin').value,
-    checkout: document.getElementById('h-checkout').value,
-    guests:   document.getElementById('h-guests').value,
-    rooms:    document.getElementById('h-rooms').value
+    loc:  document.getElementById('e-dest').value.trim(),
+    date: document.getElementById('e-date').value,
+    cat:  document.getElementById('e-cat').value
   });
   window.location.href = `${BASE}/experiences.html?${params}`;
 }
