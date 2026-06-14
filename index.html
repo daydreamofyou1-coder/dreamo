@@ -470,6 +470,16 @@ function searchHotels() {
   });
   window.location.href = `${BASE}/aerohotel.html?${params}`;
 }
+  function searchExperiences() {
+  const params = new URLSearchParams({
+    dest:     document.getElementById('h-dest').value.trim(),
+    checkin:  document.getElementById('h-checkin').value,
+    checkout: document.getElementById('h-checkout').value,
+    guests:   document.getElementById('h-guests').value,
+    rooms:    document.getElementById('h-rooms').value
+  });
+  window.location.href = `${BASE}/experiences.html?${params}`;
+}
 </script>
 </body>
 </html>
