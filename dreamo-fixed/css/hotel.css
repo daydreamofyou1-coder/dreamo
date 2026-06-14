@@ -360,7 +360,7 @@ input[type=range] { width: 100%; accent-color: var(--purple); cursor: pointer; }
   opacity: 0; pointer-events: none;
   transition: opacity .3s;
 }
-#detail-overlay.open { opacity: 1; pointer-events: all; }
+#detail-overlay.active { opacity: 1; pointer-events: all; }
 
 .detail-modal {
   background: var(--surface);
@@ -374,7 +374,7 @@ input[type=range] { width: 100%; accent-color: var(--purple); cursor: pointer; }
   transform: translateY(16px) scale(.98);
   transition: transform .3s;
 }
-#detail-overlay.open .detail-modal { transform: translateY(0) scale(1); }
+#detail-overlay.active .detail-modal { transform: translateY(0) scale(1); }
 
 /* Gallery */
 .dm-gallery { position: relative; height: 260px; background: var(--surface-2); flex-shrink: 0; overflow: hidden; }
