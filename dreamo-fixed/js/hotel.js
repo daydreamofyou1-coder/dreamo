@@ -1,7 +1,7 @@
 /* =================================================================
    AeroFly — hotel.js (Cinematic Canvas Edition)
 ================================================================= */
-console.log("AeroFly v3 Cinematic loaded!"); 
+console.log("AeroFly v4 Canvas Engine loaded successfully!"); 
 
 /* -----------------------------------------------------------------
    DATE & GUEST PICKER
@@ -115,7 +115,6 @@ function closeDetail() { document.getElementById('detail-overlay').classList.rem
 function dmSlide(d) { dmIdx = Math.max(0, Math.min(dmTotal - 1, dmIdx + d)); updateDmGallery(); renderDmDots(); }
 function updateDmGallery() { document.getElementById('dm-track').style.transform = `translateX(${-dmIdx * 100}%)`; document.getElementById('dm-count').textContent = (dmIdx + 1) + ' / ' + dmTotal; }
 function renderDmDots() { document.getElementById('dm-dots').innerHTML = Array.from({ length: dmTotal }, (_, i) => `<div class="dm-dot${i === dmIdx ? ' active' : ''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join(''); }
-
 document.getElementById('detail-overlay').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
 
 /* -----------------------------------------------------------------
@@ -208,7 +207,9 @@ function injectElevatorCSS() {
     .elev-sum-row:last-child .elev-sum-val{font-family:'Outfit',sans-serif;font-size:1.1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .elev-footer{padding:1rem 1.5rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.75rem;flex-shrink:0}
     .elev-btn-back{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);border-radius:50px;padding:.85rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+    .elev-btn-back:hover{background:var(--border)}
     .elev-btn-next{flex:1;background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;box-shadow:0 8px 24px rgba(155,114,203,0.3)}
+    .elev-btn-next:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(155,114,203,0.4)}
   `;
   document.head.appendChild(s);
 }
@@ -242,13 +243,13 @@ function closeElevator() { const el = document.getElementById('elev-overlay'); i
    DESTINATION REVEAL CINEMATIC (FULL CANVAS ENGINE)
 ================================================================= */
 const T = {
-  storm:  { sw:['#080810','#222230','#505070'], sky:['#080810','#121220','#222230'], stars:0, sun:false, moon:false, cloud:'rgba(30,30,50,0.92)', mount:'#0c0c18', city:'#080810', water:['#222230','#080810'], ground:'#181820', fog:.5, cityLights:true, rain:true, lightning:true, season:'storm' },
-  summer: { sw:['#0858a8','#ffee44','#387828'], sky:['#0858a8','#2888d0','#50b0e0'], stars:0, sun:true, sunC:'#ffee44', sunGlow:'rgba(255,238,30,0.3)', cloud:'rgba(255,255,255,0.88)', mount:'#286028', city:'#3a5060', water:['#2888d0','#0858a8'], ground:'#387828', fog:0, cityLights:false, season:'summer' },
-  spring: { sw:['#70c0ee','#ffb7c5','#98e898'], sky:['#70c0ee','#a8d8f8','#c8eeff'], stars:0, sun:true, sunC:'#fff8b0', sunGlow:'rgba(255,240,100,0.28)', cloud:'rgba(255,255,255,0.78)', mount:'#508858', city:'#4a6070', water:['#70c0ee','#3880b0'], ground:'#58a050', fog:.04, cityLights:false, season:'spring' },
-  winter: { sw:['#162030','#7899aa','#ccdde8'], sky:['#162030','#304a60','#7899aa'], stars:.28, sun:true, sunC:'#ffeecc', sunGlow:'rgba(255,240,200,0.18)', cloud:'rgba(190,205,215,0.65)', mount:'#304a58', city:'#203040', water:['#6090a0','#162030'], ground:'#ccdde8', fog:.28, cityLights:false, season:'winter', snow:true }
+  storm:  { sky:['#080810','#121220','#222230'], stars:0, sun:false, moon:false, cloud:'rgba(30,30,50,0.92)', mount:'#0c0c18', water:['#222230','#080810'], ground:'#181820', rain:true, lightning:true, season:'storm' },
+  summer: { sky:['#0858a8','#2888d0','#50b0e0'], stars:0, sun:true, sunC:'#ffee44', sunGlow:'rgba(255,238,30,0.3)', cloud:'rgba(255,255,255,0.88)', mount:'#286028', water:['#2888d0','#0858a8'], ground:'#387828', season:'summer' },
+  spring: { sky:['#70c0ee','#a8d8f8','#c8eeff'], stars:0, sun:true, sunC:'#fff8b0', sunGlow:'rgba(255,240,100,0.28)', cloud:'rgba(255,255,255,0.78)', mount:'#508858', water:['#70c0ee','#3880b0'], ground:'#58a050', season:'spring' },
+  winter: { sky:['#162030','#304a60','#7899aa'], stars:.28, sun:true, sunC:'#ffeecc', sunGlow:'rgba(255,240,200,0.18)', cloud:'rgba(190,205,215,0.65)', mount:'#304a58', water:['#6090a0','#162030'], ground:'#ccdde8', season:'winter', snow:true }
 };
 
-const TREES = [ {xp:0.15, h:160, t:'dec'}, {xp:0.3, h:110, t:'pine'}, {xp:0.45, h:190, t:'dec'}, {xp:0.65, h:130, t:'pine'}, {xp:0.85, h:170, t:'dec'} ];
+const TREES = [ {xp:0.1, h:140, t:'dec'}, {xp:0.25, h:90, t:'pine'}, {xp:0.4, h:150, t:'dec'}, {xp:0.7, h:110, t:'pine'}, {xp:0.85, h:160, t:'dec'} ];
 
 let S = { theme: 'storm', currentThemeKey: null, clouds:[], stars:[], particles:[], lt:0, la:0 };
 let revealCanvas, revealCtx, offCv, offCtx, transitionAlpha = 0, loopActive = false;
@@ -256,14 +257,13 @@ let revealCanvas, revealCtx, offCv, offCtx, transitionAlpha = 0, loopActive = fa
 function initRevealCanvas() {
   if (document.getElementById('reveal-canvas')) return;
   revealCanvas = document.createElement('canvas'); revealCanvas.id = 'reveal-canvas';
-  revealCanvas.style.cssText = 'position:absolute;inset:0;z-index:0;width:100%;height:100%;';
+  revealCanvas.style.cssText = 'position:absolute;inset:0;z-index:0;width:100%;height:100%; pointer-events:none;';
   document.getElementById('reveal-overlay').prepend(revealCanvas);
   revealCtx = revealCanvas.getContext('2d');
   offCv = document.createElement('canvas'); offCtx = offCv.getContext('2d');
   
-  S.stars = Array.from({length:300}, () => ({ x: Math.random()*2000, y: Math.random()*1000, s: Math.random()*1.6+.25, ph: Math.random()*Math.PI*2, sp: Math.random()*.04+.008 }));
-  S.clouds = Array.from({length:8}, () => ({ x: Math.random()*2000, y: 48+Math.random()*90, spd: .08+Math.random()*.14, a: .35+Math.random()*.45, puffs: Array.from({length:5}, () => ({ dx:(Math.random()-.5)*60, dy:(Math.random()-.5)*20, rx:20+Math.random()*30, ry:12+Math.random()*20 })) }));
-  S.particles = [];
+  S.stars = Array.from({length:300}, () => ({ x: Math.random()*3000, y: Math.random()*1500, s: Math.random()*1.6+.25, ph: Math.random()*Math.PI*2, sp: Math.random()*.04+.008 }));
+  S.clouds = Array.from({length:8}, () => ({ x: Math.random()*3000, y: 48+Math.random()*90, spd: .08+Math.random()*.14, a: .35+Math.random()*.45, puffs: Array.from({length:5}, () => ({ dx:(Math.random()-.5)*60, dy:(Math.random()-.5)*20, rx:20+Math.random()*30, ry:12+Math.random()*20 })) }));
   
   window.addEventListener('resize', resizeCanvas); resizeCanvas(); 
   loopActive = true; requestAnimationFrame(renderCanvas);
@@ -273,7 +273,7 @@ function resizeCanvas() { if(!revealCanvas) return; revealCanvas.width = window.
 
 function triggerThemeChange(newTheme) {
   if (S.theme === newTheme) return;
-  if (transitionAlpha <= 0) { offCtx.clearRect(0,0,offCv.width,offCv.height); offCtx.drawImage(revealCanvas, 0, 0); transitionAlpha = 1.0; }
+  if (transitionAlpha <= 0 && offCv.width > 0) { offCtx.clearRect(0,0,offCv.width,offCv.height); offCtx.drawImage(revealCanvas, 0, 0); transitionAlpha = 1.0; }
   S.theme = newTheme; S.currentThemeKey = newTheme; S.particles = []; 
 }
 
@@ -285,13 +285,13 @@ function dClouds(ctx, th, W) { const cc=th.cloud||'rgba(255,255,255,0.6)', storm
 function dRain(ctx, th, t, W, H) { if(!th.rain) return; ctx.save(); ctx.globalAlpha=.35; ctx.strokeStyle='#8899bb'; ctx.lineWidth=1.5; for(let i=0;i<150;i++){ const x=(i*137+t*.5)%W, y=(i*89+t*.8)%H; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-4,y+18); ctx.stroke(); } ctx.restore(); }
 function dLightning(ctx, th, W, H) { if(!th.lightning) return; S.lt--; if(S.lt<=0){ S.lt=100+Math.random()*200; S.la=1.0; } if(S.la>0){ ctx.save(); const f=ctx.createRadialGradient(W/2,H/4,100,W/2,H/4,W); f.addColorStop(0,`rgba(180,200,255,${S.la*0.4})`); f.addColorStop(1,'rgba(0,0,0,0)'); ctx.fillStyle=f; ctx.fillRect(0,0,W,H); if(S.la>0.8){ ctx.beginPath(); let lx=W/2+(Math.random()-0.5)*300; ctx.moveTo(lx,0); for(let i=0;i<8;i++){ lx+=(Math.random()-0.5)*80; ctx.lineTo(lx, 50+i*60); } ctx.strokeStyle=`rgba(255,255,255,${S.la})`; ctx.lineWidth=3; ctx.shadowBlur=30; ctx.shadowColor='#88aaff'; ctx.stroke(); } S.la-=0.04; ctx.restore(); } }
 function dMountains(ctx, th, W, H) { const my=H*0.6; ctx.beginPath(); ctx.moveTo(0,my); for(let x=0;x<=W;x+=60){ ctx.lineTo(x, my-60-Math.sin(x*0.01)*40-Math.cos(x*0.023)*20); } ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.fillStyle=th.mount||'#3a5030'; ctx.fill(); }
-function dGround(ctx, th, W, H) { const gY=H*0.65; ctx.beginPath(); ctx.moveTo(0,gY); for(let x=0;x<=W;x+=20) ctx.lineTo(x, gY+Math.sin(x*0.02)*10); ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.fillStyle=(th.season==='winter'||th.snow)?'#ccdbe8':th.ground||'#4a7830'; ctx.fill(); }
-function dWater(ctx, th, t, W, H) { const wY=H*0.66; const wc=th.water||['#3a90d0','#1050a0']; const g=ctx.createLinearGradient(0,wY,0,H); wc.forEach((c,i)=>g.addColorStop(i/(wc.length-1),c)); ctx.fillStyle=g; ctx.fillRect(0,wY,W,H-wY); ctx.save(); ctx.globalAlpha=0.15; ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; for(let i=0;i<8;i++){ const ry=wY+20+i*30, ph=t*.001+i*.5; ctx.beginPath(); for(let x=0;x<=W;x+=10){ const y=ry+Math.sin(x*.01+ph)*6; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); } ctx.restore(); }
+function dGround(ctx, th, W, H) { const gY=H*0.65; ctx.beginPath(); ctx.moveTo(0,gY); for(let x=0;x<=W+20;x+=20) ctx.lineTo(x, gY+Math.sin(x*0.02)*10); ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.fillStyle=(th.season==='winter'||th.snow)?'#ccdbe8':th.ground||'#4a7830'; ctx.fill(); }
+function dWater(ctx, th, t, W, H) { const wY=H*0.66; if (wY >= H) return; const wc=th.water||['#3a90d0','#1050a0']; const g=ctx.createLinearGradient(0,wY,0,H); wc.forEach((c,i)=>g.addColorStop(i/(wc.length-1),c)); ctx.fillStyle=g; ctx.fillRect(0,wY,W,H-wY); ctx.save(); ctx.globalAlpha=0.15; ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; for(let i=0;i<8;i++){ const ry=wY+20+i*30; if(ry>H) break; const ph=t*.001+i*.5; ctx.beginPath(); for(let x=0;x<=W;x+=10){ const y=ry+Math.sin(x*.01+ph)*6; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); } ctx.restore(); }
 
 /* Trees & Particles Ported from Watch */
 function dPine(ctx, x, top, h, season) { const isW = season==='winter'; for(let i=0;i<3;i++){ const ly=top+(i/3)*h*.65, lw=20+(i/3)*40; ctx.beginPath(); ctx.moveTo(x,ly); ctx.lineTo(x-lw,ly+h*.38); ctx.lineTo(x+lw,ly+h*.38); ctx.closePath(); ctx.fillStyle=isW?'#1e3d2a':'#163a16'; ctx.fill(); if(isW){ ctx.beginPath(); ctx.moveTo(x,ly); ctx.lineTo(x-lw*.58,ly+h*.16); ctx.lineTo(x+lw*.58,ly+h*.16); ctx.closePath(); ctx.fillStyle='rgba(210,225,238,0.75)'; ctx.fill(); } } }
 function dDeciduous(ctx, x, top, cr, season) { 
-  if(season==='winter'||season==='storm'){ ctx.strokeStyle='#3a2a18'; ctx.lineWidth=3; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x-cr*.5,top-cr*.6); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x+cr*.5,top-cr*.4); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,top-cr*.8); ctx.stroke(); return; } 
+  if(season==='winter'||season==='storm'){ ctx.strokeStyle='#3a2a18'; ctx.lineWidth=4; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x-cr*.5,top-cr*.6); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x+cr*.5,top-cr*.4); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,top-cr*.8); ctx.stroke(); return; } 
   const cols=season==='spring'?['#ffb0c0','#ffc0cc','#ff9aaa','#f8a8b8']:['#2a7218','#389222','#1a6210','#48a22a']; 
   for(let i=0;i<5;i++){ const a=(i/5)*Math.PI*2; ctx.beginPath(); ctx.arc(x+Math.cos(a)*cr*.38, top+Math.sin(a)*cr*.28-cr*.08, cr*.48, 0, Math.PI*2); ctx.fillStyle=cols[i%cols.length]; ctx.fill(); } 
   ctx.beginPath(); ctx.arc(x, top, cr*.52, 0, Math.PI*2); ctx.fillStyle=cols[0]; ctx.fill(); 
@@ -317,10 +317,13 @@ function dTreesAndParticles(ctx, th, W, H) {
 function renderCanvas(ts) {
   if (!loopActive) return; requestAnimationFrame(renderCanvas);
   const W = revealCanvas.width, H = revealCanvas.height, th = T[S.theme];
+  if (!th) return;
+
   revealCtx.clearRect(0,0,W,H);
   dSky(revealCtx, th, W, H); dStars(revealCtx, th, W, H); dSun(revealCtx, th, W, H); dClouds(revealCtx, th, W);
   dRain(revealCtx, th, ts, W, H); dLightning(revealCtx, th, W, H); dMountains(revealCtx, th, W, H); dGround(revealCtx, th, W, H);
   dTreesAndParticles(revealCtx, th, W, H); dWater(revealCtx, th, ts, W, H);
+
   if (transitionAlpha > 0) { revealCtx.save(); revealCtx.globalAlpha = Math.max(0, transitionAlpha); revealCtx.drawImage(offCv, 0, 0); revealCtx.restore(); transitionAlpha -= 0.02; }
 }
 
@@ -331,7 +334,7 @@ function injectRevealCSS() {
   s.textContent = `
     #reveal-overlay{position:fixed;inset:0;z-index:3000;background:#000;opacity:0;pointer-events:none;transition:opacity .5s;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;font-family:'Outfit',sans-serif}
     #reveal-overlay.active{opacity:1;pointer-events:all}
-    .rv-dyn-text{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);text-align:center;color:white;font-size:clamp(1.8rem, 5vw, 3.5rem);font-weight:800;letter-spacing:-.02em;z-index:10;opacity:0;transition:opacity .8s, transform .8s; text-shadow:0 10px 40px rgba(0,0,0,0.8);}
+    .rv-dyn-text{position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);text-align:center;color:white;font-size:clamp(1.8rem, 5vw, 3.5rem);font-weight:800;letter-spacing:-.02em;z-index:10;opacity:0;transition:opacity .8s, transform .8s; text-shadow:0 5px 25px rgba(0,0,0,0.8); width:90%;}
     .rv-dyn-text.show{opacity:1; transform:translate(-50%,-50%) scale(1.05);}
     .rv-cta{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 2.5rem;font-size:1rem;font-weight:700;cursor:pointer;opacity:0;transition:all .3s;z-index:20;box-shadow:0 8px 32px rgba(155,114,203,0.4);pointer-events:none;}
     .rv-cta.show{opacity:1;pointer-events:all;}
@@ -353,46 +356,28 @@ function buildRevealDOM() {
   document.body.appendChild(el);
 }
 
+function openDestinationReveal() {
+  injectRevealCSS(); buildRevealDOM();
+  setTimeout(() => { document.getElementById('reveal-overlay').classList.add('active'); initRevealCanvas(); runRevealSequence(); }, 100);
+}
+
 function runRevealSequence() {
-  const dt = document.getElementById('rv-dyn-text');
-  const cta = document.getElementById('rv-cta');
+  const dt = document.getElementById('rv-dyn-text'); const cta = document.getElementById('rv-cta');
   
   // 1. Storm (Antwerp)
-  triggerThemeChange('storm');
-  dt.textContent = "Antwerp, Belgium · Now";
-  setTimeout(() => dt.classList.add('show'), 200);
-  setTimeout(() => dt.classList.remove('show'), 3000);
+  triggerThemeChange('storm'); dt.textContent = "Antwerp, Belgium · Now"; setTimeout(() => dt.classList.add('show'), 200); setTimeout(() => dt.classList.remove('show'), 3000);
   
   // 2. Summer
-  setTimeout(() => {
-    triggerThemeChange('summer');
-    dt.textContent = "Need a sand beach and a cold drink?";
-    dt.classList.add('show');
-  }, 3800);
-  setTimeout(() => dt.classList.remove('show'), 6500);
+  setTimeout(() => { triggerThemeChange('summer'); dt.textContent = "Need a sand beach and a cold drink?"; dt.classList.add('show'); }, 3800); setTimeout(() => dt.classList.remove('show'), 6500);
 
   // 3. Spring (Blossoms)
-  setTimeout(() => {
-    triggerThemeChange('spring');
-    dt.textContent = "Or dreaming of cherry blossoms?";
-    dt.classList.add('show');
-  }, 7300);
-  setTimeout(() => dt.classList.remove('show'), 10000);
+  setTimeout(() => { triggerThemeChange('spring'); dt.textContent = "Or dreaming of Japanese blossoms?"; dt.classList.add('show'); }, 7300); setTimeout(() => dt.classList.remove('show'), 10000);
 
   // 4. Winter
-  setTimeout(() => {
-    triggerThemeChange('winter');
-    dt.textContent = "In the mood for some skiing?";
-    dt.classList.add('show');
-  }, 10800);
-  setTimeout(() => dt.classList.remove('show'), 13500);
+  setTimeout(() => { triggerThemeChange('winter'); dt.textContent = "In the mood for some skiing?"; dt.classList.add('show'); }, 10800); setTimeout(() => dt.classList.remove('show'), 13500);
 
   // Final CTA
-  setTimeout(() => {
-    dt.innerHTML = "Your Vibe.<br><span style='background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'>Your Choice.</span>";
-    dt.classList.add('show');
-    cta.classList.add('show');
-  }, 14300);
+  setTimeout(() => { dt.innerHTML = "Your Vibe.<br><span style='background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'>Your Choice.</span>"; dt.classList.add('show'); cta.classList.add('show'); }, 14300);
 }
 
 function closeReveal() { const el = document.getElementById('reveal-overlay'); if (el) { el.style.opacity = '0'; setTimeout(() => { loopActive = false; el.remove(); }, 500); } }
