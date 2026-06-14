@@ -7,6 +7,26 @@
 /* ── Page base ───────────────────────────────────────────────── */
 body { background: var(--bg); color: var(--text); }
 
+/* ── Main wrapper ────────────────────────────────────────────── */
+main {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+}
+
+main > h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: white;
+  letter-spacing: -.025em;
+  margin-bottom: 1.5rem;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
 /* ── Page header bar (on flights page a hero-like section exists) */
 .page-hero {
   background: var(--bg);
@@ -123,25 +143,28 @@ body { background: var(--bg); color: var(--text); }
   border: 1px solid var(--border);
   color: var(--text-muted);
   border-radius: 50px;
-  padding: .6rem 1.2rem;
+  padding: .65rem 1.4rem;
   font-size: .88rem;
-  font-weight: 600;
+  font-weight: 700;
   font-family: 'Outfit', sans-serif;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: .55rem;
   white-space: nowrap;
   box-shadow: var(--shadow-sm);
-  transition: all .2s;
+  transition: all .25s;
   flex-shrink: 0;
+  letter-spacing: .01em;
 }
 .filter-toggle-btn:hover,
 .filter-toggle-btn.active {
-  background: rgba(66,133,244,.18);
-  border-color: rgba(66,133,244,.4);
-  color: white;
+  background: rgba(66,133,244,.15);
+  border-color: rgba(66,133,244,.45);
+  color: #93c5fd;
+  box-shadow: 0 4px 16px rgba(66,133,244,.15);
 }
+.filter-toggle-btn i { font-size: .9rem; }
 .filter-toggle-btn .badge {
   background: var(--red);
   color: #fff;
@@ -154,22 +177,27 @@ body { background: var(--bg); color: var(--text); }
 
 /* ── Filter panel ────────────────────────────────────────────── */
 .filter-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--surface) 0%, rgba(30,41,59,.95) 100%);
+  border: 1px solid rgba(66,133,244,.18);
   border-radius: 20px;
-  padding: 1.2rem 1.5rem;
-  box-shadow: var(--shadow-sm);
+  padding: 1.4rem 1.8rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.05);
   margin-bottom: 1.5rem;
   display: none;
   animation: stepIn .25s ease;
 }
 .filter-panel.open { display: block; }
-.filter-panel-inner { display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; }
+.filter-panel-inner {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
 .filter-group { flex: 1; min-width: 180px; }
 .filter-group label {
-  font-size: .67rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .06em; color: var(--text-sub);
-  display: block; margin-bottom: .7rem;
+  font-size: .65rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--text-sub);
+  display: block; margin-bottom: .8rem;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -177,8 +205,8 @@ body { background: var(--bg); color: var(--text); }
 .conn-pill {
   border: 1.5px solid var(--border);
   border-radius: 20px;
-  padding: .28rem .8rem;
-  font-size: .78rem; font-weight: 600;
+  padding: .35rem .9rem;
+  font-size: .8rem; font-weight: 600;
   font-family: 'Outfit', sans-serif;
   cursor: pointer; transition: all .2s;
   color: var(--text-muted); background: transparent;
@@ -186,7 +214,8 @@ body { background: var(--bg); color: var(--text); }
 .conn-pill.active {
   border-color: var(--blue);
   background: rgba(66,133,244,.18);
-  color: white;
+  color: #93c5fd;
+  box-shadow: 0 0 0 1px rgba(66,133,244,.2);
 }
 
 .price-range-wrap { display: flex; flex-direction: column; gap: .5rem; }
