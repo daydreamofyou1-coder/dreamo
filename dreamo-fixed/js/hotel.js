@@ -1,10 +1,10 @@
 /* =================================================================
-   AeroFly — hotel.js (Cinematic Luxe Edition)
+   AeroFly — hotel.js (Cinematic Luxe & Working Map)
 ================================================================= */
-console.log("AeroFly v5: Luxe UI & Cinematic Canvas Loaded"); 
+console.log("AeroFly v6: Map Fixed & Cinematic Ready!"); 
 
 /* -----------------------------------------------------------------
-   DATE & GUEST PICKER (Unchanged)
+   DATE & GUEST PICKER
 ----------------------------------------------------------------- */
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const today = new Date(); today.setHours(0,0,0,0);
@@ -26,7 +26,7 @@ function confirmGuests() { const p = []; if (guests.adult) p.push(guests.adult +
 document.addEventListener('click', () => { document.querySelectorAll('.sb-popup').forEach(p => p.classList.remove('active')); });
 
 /* -----------------------------------------------------------------
-   HOTEL DATA & RENDERING
+   HOTEL DATA
 ----------------------------------------------------------------- */
 const hotels = [
   { id: 'h1', name: 'Marina Bay Sands', stars: 5, loc: 'Marina Bay · 0.8 km from centre', score: 9.2, scoreLbl: 'Superb', reviews: 2847, price: 320, tags: ['Infinity Pool','Casino','Spa'], featured: true, imgs: ['https://images.unsplash.com/photo-1562790351-d273a961e0e9?w=900&q=80', 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80', 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=900&q=80'] },
@@ -69,7 +69,6 @@ function resetFilters() { maxPriceFilter = 600; starFilter = 'all'; document.que
    DETAIL MODAL 
 ----------------------------------------------------------------- */
 let dmIdx = 0, dmTotal = 0, currentHotel = null;
-
 function openDetail(hid) {
   currentHotel = hotels.find(h => h.id === hid);
   if (!currentHotel) return;
@@ -86,48 +85,44 @@ function openDetail(hid) {
   
   document.querySelectorAll('.dm-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
   document.querySelectorAll('.dm-tc').forEach((c, i) => c.classList.toggle('active', i === 0));
-  
   document.getElementById('detail-overlay').classList.add('active');
 }
-
 function closeDetail() { document.getElementById('detail-overlay').classList.remove('active'); }
 function dmSlide(d) { dmIdx = Math.max(0, Math.min(dmTotal - 1, dmIdx + d)); updateDmGallery(); renderDmDots(); }
 function updateDmGallery() { document.getElementById('dm-track').style.transform = `translateX(${-dmIdx * 100}%)`; document.getElementById('dm-count').textContent = (dmIdx + 1) + ' / ' + dmTotal; }
 function renderDmDots() { document.getElementById('dm-dots').innerHTML = Array.from({ length: dmTotal }, (_, i) => `<div class="dm-dot${i === dmIdx ? ' active' : ''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join(''); }
 function switchTab(el, id) { document.querySelectorAll('.dm-tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); document.querySelectorAll('.dm-tc').forEach(c => c.classList.remove('active')); document.getElementById('dtc-' + id).classList.add('active'); }
 document.getElementById('detail-overlay').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
+function toggleDmFav() { const i = document.getElementById('dbs-fav-icon'); const saved = i.className.includes('regular'); i.className = saved ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; i.style.color = saved ? 'var(--red)' : ''; }
 
 /* -----------------------------------------------------------------
    MAP CANVAS & FULLSCREEN OVERLAY
 ----------------------------------------------------------------- */
-const mapDests = [ { name: 'Marina Bay Sands', price: '$320', x: 62, y: 55, color: '#3B6B9A', size: 20 }, { name: 'Raffles', price: '$480', x: 38, y: 35, color: '#C9A84C', size: 18 }, { name: 'The Capitol', price: '$215', x: 45, y: 28, color: '#22a05a', size: 14 } ];
 function drawMap(canvasId) {
   const canvas = document.getElementById(canvasId); if(!canvas) return;
-  canvas.width = canvas.parentElement.offsetWidth; canvas.height = canvas.parentElement.offsetHeight;
+  const parent = canvas.parentElement;
+  canvas.width = parent.offsetWidth; canvas.height = parent.offsetHeight;
   const ctx = canvas.getContext('2d'), w = canvas.width, h = canvas.height;
+  
   ctx.fillStyle = '#080c16'; ctx.fillRect(0, 0, w, h); 
-  ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.ellipse(w*.55, h*.6, w*.25, h*.2, 0.2, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1e293b'; 
+  ctx.beginPath(); ctx.ellipse(w*.55, h*.6, w*.25, h*.2, 0.2, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.ellipse(w*.2, h*.7, w*.15, h*.15, -0.3, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; for (let x=0; x<w; x+=w/8) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); } for (let y=0; y<h; y+=h/6) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
-  ctx.strokeStyle = 'rgba(155,114,203,0.3)'; ctx.lineWidth = 2; [[w*.1,h*.3,w*.9,h*.5],[w*.3,h*.1,w*.4,h*.9],[w*.5,h*.2,w*.6,h*.8]].forEach(([x1,y1,x2,y2])=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+  
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; 
+  for (let x=0; x<w; x+=w/8) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); } 
+  for (let y=0; y<h; y+=h/6) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+  
+  ctx.strokeStyle = 'rgba(155,114,203,0.3)'; ctx.lineWidth = 2; 
+  [[w*.1,h*.3,w*.9,h*.5],[w*.3,h*.1,w*.4,h*.9],[w*.5,h*.2,w*.6,h*.8]].forEach(([x1,y1,x2,y2])=>{ ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
 }
-function initMap() { 
-  drawMap('map-canvas'); 
-  const area = document.getElementById('map-area');
-  mapDests.forEach(d => { const dot = document.createElement('div'); dot.className = 'map-dest-dot'; dot.style.left = d.x + '%'; dot.style.top = d.y + '%'; dot.innerHTML = `<div class="dot-pulse" style="width:${d.size}px;height:${d.size}px;"></div><div class="dot-circle" style="width:${d.size}px;height:${d.size}px;background:${d.color};"></div>`; area.appendChild(dot); });
-}
-
-function openFullMap() {
-  let el = document.getElementById('full-map-overlay');
-  if (!el) {
-    el = document.createElement('div'); el.id = 'full-map-overlay';
-    el.innerHTML = `<button class="full-map-close" onclick="closeFullMap()"><i class="fa-solid fa-xmark"></i></button><div class="full-map-container" id="full-map-container"><canvas id="full-map-canvas" style="width:100%;height:100%;"></canvas></div>`;
-    document.body.appendChild(el);
-  }
-  el.classList.add('active');
-  setTimeout(() => drawMap('full-map-canvas'), 100);
+function initMap() { drawMap('map-canvas'); }
+function openFullMap() { 
+  document.getElementById('full-map-overlay').classList.add('active');
+  setTimeout(() => drawMap('full-map-canvas'), 100); // Draw after animation expands
 }
 function closeFullMap() { document.getElementById('full-map-overlay').classList.remove('active'); }
+document.getElementById('full-map-overlay').addEventListener('click', function(e) { if(e.target === this) closeFullMap(); });
 
 /* =================================================================
    ELEVATOR BOOKING FLOW (4 Steps)
@@ -138,35 +133,42 @@ let elevSelectedRoom = ''; let elevSelectedRoomPrice = 0;
 function openElevatorFlow(roomName, roomPrice) {
   closeDetail(); 
   elevatorStep = 1; elevSelectedRoom = roomName; elevSelectedRoomPrice = roomPrice;
-  buildElevatorModal(); 
   document.getElementById('elev-overlay').classList.add('active'); 
   renderElevatorStep(); 
 }
 
-function buildElevatorModal() {
-  let el = document.getElementById('elev-overlay');
-  if (!el) { el = document.createElement('div'); el.id = 'elev-overlay'; document.body.appendChild(el); }
-  el.innerHTML = `
-    <div class="elev-modal">
-      <div class="elev-shaft"><div class="elev-car" id="elev-car">🛎️</div><div class="elev-floors" id="elev-floors"></div><button class="elev-close" onclick="closeElevator()"><i class="fa-solid fa-xmark"></i></button></div>
-      <div class="elev-body">
-        <div class="elev-panel active" id="ep-1"><div class="elev-section-title">When are you staying?</div><div class="elev-date-row"><div class="elev-date-box active"><div class="elev-date-lbl">Check-in</div><div class="elev-date-val" id="elev-cin">14 May</div></div><div class="elev-date-box"><div class="elev-date-lbl">Check-out</div><div class="elev-date-val" id="elev-cout">25 May</div></div></div><div class="elev-nights-badge">✦ 11 nights selected</div><p style="font-size:.85rem;color:var(--text-muted);line-height:1.6;">Dates pre-filled from search. Confirm to proceed.</p></div>
-        <div class="elev-panel" id="ep-2"><div class="elev-section-title">Guest details</div><button class="elev-autofill" onclick="elevAutofill()"><i class="fa-solid fa-bolt"></i> Autofill from profile</button><div class="elev-form-grid"><div class="elev-field"><label>First Name</label><input type="text" id="ef-fname" placeholder="First name"></div><div class="elev-field"><label>Last Name</label><input type="text" id="ef-lname" placeholder="Last name"></div><div class="elev-field"><label>Email</label><input type="email" id="ef-email" placeholder="email@example.com"></div><div class="elev-field"><label>Phone</label><input type="tel" id="ef-phone" placeholder="+32 ..."></div><div class="elev-field full"><label>Special Requests</label><input type="text" id="ef-requests" placeholder="High floor, etc."></div></div></div>
-        <div class="elev-panel" id="ep-3"><div class="elev-section-title">Enhance your stay</div><div class="elev-extra-grid"><div class="elev-extra active" onclick="this.classList.toggle('active')"><div class="elev-extra-icon">🍳</div><div><div class="elev-extra-name">Daily Breakfast</div><div class="elev-extra-desc">For 2 guests · Full buffet</div></div><div class="elev-extra-price">+$38/night</div><div class="elev-chk"><i class="fa-solid fa-check"></i></div></div><div class="elev-extra" onclick="this.classList.toggle('active')"><div class="elev-extra-icon">🚗</div><div><div class="elev-extra-name">Airport Transfer</div><div class="elev-extra-desc">Private car</div></div><div class="elev-extra-price">+$65</div><div class="elev-chk"><i class="fa-solid fa-check"></i></div></div></div></div>
-        <div class="elev-panel" id="ep-4"><div class="elev-section-title">Review your booking</div><div class="elev-summary" id="elev-summary-box"></div></div>
-      </div>
-      <div class="elev-footer"><button class="elev-btn-back" id="elev-back" onclick="elevPrev()" style="display:none">← Back</button><button class="elev-btn-next" id="elev-next" onclick="elevNext()">Next floor ↑</button></div>
-    </div>`;
-  renderElevatorFloors();
+function renderElevatorFloors() { 
+  const container = document.getElementById('elev-floors'); if (!container) return; 
+  container.innerHTML = Array.from({ length: ELEVATOR_TOTAL }, (_, i) => { 
+    const floorNum = ELEVATOR_TOTAL - i, isDone = floorNum < elevatorStep, isActive = floorNum === elevatorStep; 
+    return `<div class="elev-floor-row"><span class="elev-floor-num">${floorNum}</span><div class="elev-floor-bar${isActive ? ' active' : isDone ? ' done' : ''}"></div><span class="elev-floor-label${isActive ? ' active' : ''}">${ELEV_FLOOR_NAMES[floorNum - 1]}</span></div>`; 
+  }).join(''); 
 }
 
-function renderElevatorFloors() { const container = document.getElementById('elev-floors'); if (!container) return; container.innerHTML = Array.from({ length: ELEVATOR_TOTAL }, (_, i) => { const floorNum = ELEVATOR_TOTAL - i; const isDone = floorNum < elevatorStep; const isActive = floorNum === elevatorStep; return `<div class="elev-floor-row"><span class="elev-floor-num">${floorNum}</span><div class="elev-floor-bar${isActive ? ' active' : isDone ? ' done' : ''}"></div><span class="elev-floor-label${isActive ? ' active' : ''}">${ELEV_FLOOR_NAMES[floorNum - 1]}</span></div>`; }).join(''); }
-function renderElevatorStep() { document.querySelectorAll('.elev-panel').forEach((p, i) => p.classList.toggle('active', i + 1 === elevatorStep)); const car = document.getElementById('elev-car'); if (car) { car.classList.remove('going-up'); void car.offsetWidth; car.classList.add('going-up'); } renderElevatorFloors(); const backBtn = document.getElementById('elev-back'), nextBtn = document.getElementById('elev-next'); if (backBtn) backBtn.style.display = elevatorStep > 1 ? 'block' : 'none'; if (nextBtn) nextBtn.textContent = elevatorStep === ELEVATOR_TOTAL ? '✦ Confirm Booking' : 'Next floor ↑'; if (elevatorStep === ELEVATOR_TOTAL) buildElevSummary(); }
-function buildElevSummary() { const box = document.getElementById('elev-summary-box'); if (!box || !currentHotel) return; const fname = document.getElementById('ef-fname')?.value || '—', lname = document.getElementById('ef-lname')?.value || '—'; const extras = [...document.querySelectorAll('.elev-extra.active')]; const extrasTotal = extras.reduce((sum, e) => { const txt = e.querySelector('.elev-extra-price').textContent; const num = parseInt(txt.replace(/[^0-9]/g, '')) || 0; return sum + (txt.includes('night') ? num * 11 : num); }, 0); const total = (elevSelectedRoomPrice * 11) + extrasTotal; box.innerHTML = `<div class="elev-sum-hotel"><div class="elev-sum-img"><img src="${currentHotel.imgs[0]}" onerror="this.style.background='#1E293B'"></div><div><div class="elev-sum-name">${currentHotel.name}</div><div style="font-size:.75rem;color:var(--text-muted)">${currentHotel.loc}</div></div></div><div class="elev-sum-row"><span class="elev-sum-lbl">Guest</span><span class="elev-sum-val">${(fname + ' ' + lname).trim()}</span></div><div class="elev-sum-row"><span class="elev-sum-lbl">Room</span><span class="elev-sum-val">${elevSelectedRoom}</span></div><div class="elev-sum-row"><span class="elev-sum-lbl">Total</span><span class="elev-sum-val" style="color:var(--purple); font-size:1.1rem; font-weight:800;">$${total.toLocaleString()}</span></div>`; }
-function elevAutofill() { const fields = [['ef-fname','Sarah'],['ef-lname','Mitchell'],['ef-email','sarah@email.com'],['ef-phone','+32 478 123 456']]; fields.forEach(([id, val], i) => { setTimeout(() => { const el = document.getElementById(id); if (el) { el.value = val; el.classList.add('filled'); } }, i * 100); }); setTimeout(() => { elevatorStep++; renderElevatorStep(); }, fields.length * 100 + 400); }
+function renderElevatorStep() { 
+  document.querySelectorAll('.elev-panel').forEach((p, i) => p.classList.toggle('active', i + 1 === elevatorStep)); 
+  const car = document.getElementById('elev-car'); if (car) { car.classList.remove('going-up'); void car.offsetWidth; car.classList.add('going-up'); } 
+  renderElevatorFloors(); 
+  const backBtn = document.getElementById('elev-back'), nextBtn = document.getElementById('elev-next'); 
+  if (backBtn) backBtn.style.display = elevatorStep > 1 ? 'block' : 'none'; 
+  if (nextBtn) nextBtn.textContent = elevatorStep === ELEVATOR_TOTAL ? '✦ Confirm Booking' : 'Next floor ↑'; 
+  if (elevatorStep === ELEVATOR_TOTAL) buildElevSummary(); 
+}
+
+function buildElevSummary() { 
+  const box = document.getElementById('elev-summary-box'); if (!box || !currentHotel) return; 
+  const total = (elevSelectedRoomPrice * 11); 
+  box.innerHTML = `<div class="elev-sum-hotel"><div style="width:60px;height:50px;border-radius:10px;overflow:hidden;flex-shrink:0;"><img src="${currentHotel.imgs[0]}" style="width:100%;height:100%;object-fit:cover;"></div><div><div style="color:white;font-weight:700;">${currentHotel.name}</div><div style="font-size:.75rem;color:var(--text-muted)">${currentHotel.loc}</div></div></div><div style="display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px dashed rgba(255,255,255,0.1);"><span style="color:var(--text-muted)">Room</span><span style="color:white;font-weight:600;">${elevSelectedRoom}</span></div><div style="display:flex;justify-content:space-between;padding:.8rem 0 0;"><span style="color:var(--text-muted)">Total</span><span style="color:var(--purple);font-size:1.2rem;font-weight:800;">$${total.toLocaleString()}</span></div>`; 
+}
+
+function elevAutofill() { 
+  const fields = [['ef-fname','Sarah'],['ef-lname','Mitchell'],['ef-email','sarah@email.com'],['ef-phone','+32 478 123 456']]; 
+  fields.forEach(([id, val], i) => { setTimeout(() => { const el = document.getElementById(id); if (el) { el.value = val; el.classList.add('filled'); } }, i * 100); }); 
+  setTimeout(() => { elevatorStep++; renderElevatorStep(); }, fields.length * 100 + 400); 
+}
 function elevNext() { if (elevatorStep === ELEVATOR_TOTAL) { closeElevator(); openDestinationReveal(); return; } elevatorStep++; renderElevatorStep(); }
 function elevPrev() { if (elevatorStep > 1) { elevatorStep--; renderElevatorStep(); } }
-function closeElevator() { const el = document.getElementById('elev-overlay'); if (el) el.classList.remove('active'); }
+function closeElevator() { document.getElementById('elev-overlay').classList.remove('active'); }
 
 /* =================================================================
    DESTINATION REVEAL CINEMATIC (FULL CANVAS ENGINE)
@@ -184,10 +186,7 @@ let S = { theme: 'storm', currentThemeKey: null, clouds:[], stars:[], particles:
 let revealCanvas, revealCtx, offCv, offCtx, transitionAlpha = 0, loopActive = false;
 
 function initRevealCanvas() {
-  if (document.getElementById('reveal-canvas')) return;
-  revealCanvas = document.createElement('canvas'); revealCanvas.id = 'reveal-canvas';
-  revealCanvas.style.cssText = 'position:absolute;inset:0;z-index:0;width:100%;height:100%; pointer-events:none;';
-  document.getElementById('reveal-overlay').prepend(revealCanvas);
+  revealCanvas = document.getElementById('reveal-canvas');
   revealCtx = revealCanvas.getContext('2d');
   offCv = document.createElement('canvas'); offCtx = offCv.getContext('2d');
   
@@ -217,7 +216,7 @@ function dMountains(ctx, th, W, H) { const my=H*0.7; ctx.beginPath(); ctx.moveTo
 function dGround(ctx, th, W, H) { const gY=H*0.75; ctx.beginPath(); ctx.moveTo(0,gY); for(let x=0;x<=W+20;x+=20) ctx.lineTo(x, gY+Math.sin(x*0.02)*15); ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.fillStyle=(th.season==='winter'||th.snow)?'#ccdbe8':th.ground||'#4a7830'; ctx.fill(); }
 function dWater(ctx, th, t, W, H) { const wY=H*0.77; if (wY >= H) return; const wc=th.water||['#3a90d0','#1050a0']; const g=ctx.createLinearGradient(0,wY,0,H); wc.forEach((c,i)=>g.addColorStop(i/(wc.length-1),c)); ctx.fillStyle=g; ctx.fillRect(0,wY,W,H-wY); ctx.save(); ctx.globalAlpha=0.15; ctx.strokeStyle='#fff'; ctx.lineWidth=2; for(let i=0;i<8;i++){ const ry=wY+20+i*40; if(ry>H) break; const ph=t*.001+i*.5; ctx.beginPath(); for(let x=0;x<=W;x+=15){ const y=ry+Math.sin(x*.01+ph)*8; x===0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); } ctx.restore(); }
 
-/* Trees & Particles Ported from Watch */
+/* Trees & Particles */
 function dPine(ctx, x, top, h, season) { const isW = season==='winter'; for(let i=0;i<3;i++){ const ly=top+(i/3)*h*.65, lw=25+(i/3)*45; ctx.beginPath(); ctx.moveTo(x,ly); ctx.lineTo(x-lw,ly+h*.38); ctx.lineTo(x+lw,ly+h*.38); ctx.closePath(); ctx.fillStyle=isW?'#1e3d2a':'#163a16'; ctx.fill(); if(isW){ ctx.beginPath(); ctx.moveTo(x,ly); ctx.lineTo(x-lw*.58,ly+h*.16); ctx.lineTo(x+lw*.58,ly+h*.16); ctx.closePath(); ctx.fillStyle='rgba(210,225,238,0.75)'; ctx.fill(); } } }
 function dDeciduous(ctx, x, top, cr, season) { 
   if(season==='winter'||season==='storm'){ ctx.strokeStyle='#3a2a18'; ctx.lineWidth=5; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x-cr*.5,top-cr*.6); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x+cr*.5,top-cr*.4); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,top); ctx.lineTo(x,top-cr*.8); ctx.stroke(); return; } 
@@ -255,17 +254,9 @@ function renderCanvas(ts) {
 }
 
 function openDestinationReveal() {
-  let el = document.getElementById('reveal-overlay');
-  if (!el) {
-    el = document.createElement('div'); el.id = 'reveal-overlay';
-    el.innerHTML = `
-      <div class="rv-dyn-text" id="rv-dyn-text"></div>
-      <button class="rv-cta" id="rv-cta" onclick="closeReveal()">✦ View My Booking</button>
-      <button class="rv-skip" onclick="closeReveal()">Skip <i class="fa-solid fa-forward-step" style="margin-left:4px"></i></button>
-    `;
-    document.body.appendChild(el);
-  }
-  setTimeout(() => { document.getElementById('reveal-overlay').classList.add('active'); initRevealCanvas(); runRevealSequence(); }, 100);
+  document.getElementById('reveal-overlay').classList.add('active');
+  initRevealCanvas();
+  runRevealSequence();
 }
 
 function runRevealSequence() {
@@ -287,7 +278,7 @@ function runRevealSequence() {
   setTimeout(() => { dt.innerHTML = "Your Vibe.<br><span style='background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;'>Your Choice.</span>"; dt.classList.add('show'); cta.classList.add('show'); }, 14300);
 }
 
-function closeReveal() { const el = document.getElementById('reveal-overlay'); if (el) { el.style.opacity = '0'; setTimeout(() => { loopActive = false; el.remove(); }, 500); } }
+function closeReveal() { const el = document.getElementById('reveal-overlay'); if (el) { el.classList.remove('active'); setTimeout(() => { loopActive = false; }, 500); } }
 
 /* -----------------------------------------------------------------
    INIT
