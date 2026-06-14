@@ -394,20 +394,20 @@ function injectElevatorCSS() {
     #elev-overlay.active{opacity:1;pointer-events:all}
     .elev-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:520px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(24px);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 30px 80px rgba(0,0,0,0.5)}
     #elev-overlay.active .elev-modal{transform:translateY(0)}
-    .elev-shaft{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;background:#F1F5F9;border-radius:24px 24px 0 0;position:relative;overflow:hidden}
+    .elev-shaft{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;background:linear-gradient(135deg,#1E293B,#0F172A);border-radius:24px 24px 0 0;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
     .elev-shaft::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,0.03) 40px,rgba(255,255,255,0.03) 41px);pointer-events:none}
-    .elev-car{width:44px;height:44px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 4px 12px rgba(201,168,76,0.4);transition:transform .5s cubic-bezier(0.34,1.56,0.64,1)}
+    .elev-car{width:44px;height:44px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 4px 12px rgba(155,114,203,0.4);transition:transform .5s cubic-bezier(0.34,1.56,0.64,1)}
     .elev-car.going-up{animation:elevGo .5s cubic-bezier(0.34,1.56,0.64,1)}
     @keyframes elevGo{0%{transform:translateY(12px) scale(.9)}60%{transform:translateY(-6px) scale(1.05)}100%{transform:translateY(0) scale(1)}}
     .elev-floors{display:flex;flex-direction:column;gap:3px;flex:1}
     .elev-floor-row{display:flex;align-items:center;gap:.5rem}
-    .elev-floor-num{font-size:.6rem;font-weight:700;color:rgba(255,255,255,0.4);width:16px;text-align:right;font-family:'Outfit', sans-serif}
+    .elev-floor-num{font-size:.6rem;font-weight:700;color:rgba(241,245,249,0.5);width:16px;text-align:right;font-family:'Outfit', sans-serif}
     .elev-floor-bar{flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;transition:background .3s}
     .elev-floor-bar.active{background:var(--gradient)}
     .elev-floor-bar.done{background:rgba(155,114,203,0.3)}
-    .elev-floor-label{font-size:.62rem;color:rgba(255,255,255,0.5);font-family:'Roboto', sans-serif;white-space:nowrap;transition:color .3s}
+    .elev-floor-label{font-size:.62rem;color:rgba(241,245,249,0.4);font-family:'Roboto', sans-serif;white-space:nowrap;transition:color .3s}
     .elev-floor-label.active{color:var(--purple);font-weight:600}
-    .elev-close{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0}
+    .elev-close{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0}
     .elev-close:hover{background:rgba(255,255,255,0.2);color:#fff}
     .elev-body{overflow-y:auto;flex:1;padding:1.5rem}
     .elev-body::-webkit-scrollbar{width:4px}
@@ -415,29 +415,29 @@ function injectElevatorCSS() {
     .elev-panel{display:none;animation:elevIn .3s cubic-bezier(0.34,1.56,0.64,1)}
     .elev-panel.active{display:block}
     @keyframes elevIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .elev-section-title{font-family:'Outfit', sans-serif;font-size:1.3rem;font-weight:600;color:#F1F5F9;margin-bottom:1.2rem}
+    .elev-section-title{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:700;color:white;margin-bottom:1.2rem}
     .elev-date-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem}
     .elev-date-box{border:2px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .2s;background:var(--surface);text-align:center}
-    .elev-date-box:hover,.elev-date-box.active{border-color:var(--purple);box-shadow:0 4px 16px rgba(201,168,76,0.2)}
+    .elev-date-box:hover,.elev-date-box.active{border-color:var(--purple);box-shadow:0 4px 16px rgba(155,114,203,0.2)}
     .elev-date-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:.3rem}
-    .elev-date-val{font-family:'Outfit', sans-serif;font-size:1.2rem;font-weight:600;color:#F1F5F9}
-    .elev-nights-badge{display:inline-block;background:var(--gradient);color:#F1F5F9;font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;margin-bottom:1rem}
+    .elev-date-val{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:700;color:white}
+    .elev-nights-badge{display:inline-block;background:var(--gradient);color:white;font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;margin-bottom:1rem}
     .elev-room-list{display:flex;flex-direction:column;gap:.7rem}
     .elev-room-opt{border:2px solid var(--border);border-radius:16px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s;background:var(--surface);display:flex;align-items:center;gap:1rem}
     .elev-room-opt:hover{border-color:var(--purple);transform:translateY(-1px)}
-    .elev-room-opt.active{border-color:var(--purple);background:rgba(201,168,76,0.06);box-shadow:0 4px 16px rgba(201,168,76,0.2)}
+    .elev-room-opt.active{border-color:var(--purple);background:rgba(155,114,203,0.08);box-shadow:0 4px 16px rgba(155,114,203,0.2)}
     .elev-room-icon{width:46px;height:46px;border-radius:12px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-    .elev-room-name{font-family:'Outfit', sans-serif;font-size:1rem;font-weight:600;margin-bottom:.2rem}
+    .elev-room-name{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:white;margin-bottom:.2rem}
     .elev-room-feats{font-size:.72rem;color:var(--text-muted)}
-    .elev-room-price{font-family:'Outfit', sans-serif;font-size:1.1rem;font-weight:700;color:#F1F5F9;margin-left:auto;flex-shrink:0}
+    .elev-room-price{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:700;color:white;margin-left:auto;flex-shrink:0}
     .elev-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
     .elev-room-opt.active .elev-radio{border-color:var(--purple);background:var(--purple)}
-    .elev-room-opt.active .elev-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#F1F5F9}
+    .elev-room-opt.active .elev-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:white}
     .elev-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
     .elev-field{display:flex;flex-direction:column;gap:.3rem}
     .elev-field.full{grid-column:1/-1}
     .elev-field label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
-    .elev-field input,.elev-field select{border:1.5px solid var(--border);border-radius:10px;padding:.65rem .9rem;font-family:'Roboto', sans-serif;font-size:.9rem;color:#F1F5F9;background:var(--bg);outline:none;transition:all .2s}
+    .elev-field input,.elev-field select{border:1.5px solid var(--border);border-radius:10px;padding:.65rem .9rem;font-family:'Roboto',sans-serif;font-size:.9rem;color:white;background:var(--bg);outline:none;transition:all .2s}
     .elev-field input:focus,.elev-field select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(155,114,203,0.15)}
     .elev-field input.filled{border-color:rgba(34,160,90,0.5);background:rgba(34,160,90,0.04)}
     .elev-autofill{display:flex;align-items:center;gap:.4rem;background:rgba(155,114,203,0.1);border:1px solid rgba(155,114,203,0.3);color:#c4b5fd;border-radius:20px;padding:.35rem .9rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Roboto', sans-serif;transition:all .2s;margin-bottom:1rem}
@@ -445,29 +445,29 @@ function injectElevatorCSS() {
     .elev-extra-grid{display:flex;flex-direction:column;gap:.6rem}
     .elev-extra{border:2px solid var(--border);border-radius:14px;padding:.9rem 1rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:all .2s;background:var(--surface)}
     .elev-extra:hover{border-color:var(--purple)}
-    .elev-extra.active{border-color:var(--purple);background:rgba(155,114,203,0.08)}
+    .elev-extra.active{border-color:var(--purple);background:rgba(155,114,203,0.1)}
     .elev-extra-icon{font-size:1.2rem;flex-shrink:0}
-    .elev-extra-name{font-weight:600;font-size:.9rem;font-family:'Outfit', sans-serif}
+    .elev-extra-name{font-weight:700;font-size:.9rem;font-family:'Outfit',sans-serif;color:white}
     .elev-extra-desc{font-size:.73rem;color:var(--text-muted)}
-    .elev-extra-price{margin-left:auto;font-weight:700;font-family:'Outfit', sans-serif;color:#F1F5F9;flex-shrink:0}
+    .elev-extra-price{margin-left:auto;font-weight:700;font-family:'Outfit',sans-serif;color:white;flex-shrink:0}
     .elev-chk{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .2s}
-    .elev-extra.active .elev-chk{background:var(--purple);border-color:var(--purple);color:#F1F5F9}
+    .elev-extra.active .elev-chk{background:var(--purple);border-color:var(--purple);color:white}
     .elev-summary{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:1.2rem;margin-bottom:1rem}
     .elev-sum-hotel{display:flex;align-items:center;gap:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--border);margin-bottom:.9rem}
     .elev-sum-img{width:64px;height:50px;border-radius:10px;overflow:hidden;flex-shrink:0}
     .elev-sum-img img{width:100%;height:100%;object-fit:cover}
-    .elev-sum-name{font-family:'Outfit', sans-serif;font-size:1rem;font-weight:600}
+    .elev-sum-name{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;color:white}
     .elev-sum-loc{font-size:.73rem;color:var(--text-muted);margin-top:.15rem}
     .elev-sum-row{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;padding:.3rem 0;border-bottom:1px dashed var(--border)}
     .elev-sum-row:last-child{border-bottom:none;font-weight:700;font-size:.95rem;padding-top:.5rem}
     .elev-sum-lbl{color:var(--text-muted)}
-    .elev-sum-val{color:#F1F5F9;font-weight:500}
-    .elev-sum-row:last-child .elev-sum-val{font-family:'Outfit', sans-serif;font-size:1.1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:'Outfit',sans-serif}
+    .elev-sum-val{color:white;font-weight:500}
+    .elev-sum-row:last-child .elev-sum-val{font-family:'Outfit',sans-serif;font-size:1.1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .elev-footer{padding:1rem 1.5rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.75rem;flex-shrink:0}
-    .elev-btn-back{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);border-radius:50px;padding:.85rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Roboto', sans-serif;transition:all .2s}
+    .elev-btn-back{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);border-radius:50px;padding:.85rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
     .elev-btn-back:hover{background:var(--border)}
-    .elev-btn-next{flex:1;background:var(--gradient);color:#F1F5F9;border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Roboto', sans-serif;transition:all .2s;box-shadow:0 8px 24px rgba(201,168,76,0.3)}
-    .elev-btn-next:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,0.4)}
+    .elev-btn-next{flex:1;background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;box-shadow:0 8px 24px rgba(155,114,203,0.3)}
+    .elev-btn-next:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(155,114,203,0.4)}
   `;
   document.head.appendChild(s);
 }
@@ -484,7 +484,6 @@ function buildElevatorModal() {
         <button class="elev-close" onclick="closeElevator()"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="elev-body">
-        <!-- Floor 1: Dates -->
         <div class="elev-panel active" id="ep-1">
           <div class="elev-section-title">When are you staying?</div>
           <div class="elev-date-row">
@@ -494,7 +493,6 @@ function buildElevatorModal() {
           <div class="elev-nights-badge">✦ 11 nights selected</div>
           <p style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">Dates are pre-filled from your search. Adjust them above or continue to choose your room.</p>
         </div>
-        <!-- Floor 2: Room -->
         <div class="elev-panel" id="ep-2">
           <div class="elev-section-title">Select your room</div>
           <div class="elev-room-list">
@@ -518,7 +516,6 @@ function buildElevatorModal() {
             </div>
           </div>
         </div>
-        <!-- Floor 3: Guests -->
         <div class="elev-panel" id="ep-3">
           <div class="elev-section-title">Guest details</div>
           <button class="elev-autofill" onclick="elevAutofill()"><i class="fa-solid fa-bolt"></i> Autofill from profile</button>
@@ -530,7 +527,6 @@ function buildElevatorModal() {
             <div class="elev-field full"><label>Special Requests</label><input type="text" id="ef-requests" placeholder="High floor, early check-in, etc."></div>
           </div>
         </div>
-        <!-- Floor 4: Extras -->
         <div class="elev-panel" id="ep-4">
           <div class="elev-section-title">Enhance your stay</div>
           <div class="elev-extra-grid">
@@ -560,7 +556,6 @@ function buildElevatorModal() {
             </div>
           </div>
         </div>
-        <!-- Floor 5: Review -->
         <div class="elev-panel" id="ep-5">
           <div class="elev-section-title">Review your booking</div>
           <div class="elev-summary" id="elev-summary-box"></div>
@@ -747,14 +742,14 @@ function injectRevealCSS() {
     .rv-dest-img{height:130px;position:relative;overflow:hidden}
     .rv-dest-img-bg{width:100%;height:100%;object-fit:cover}
     .rv-dest-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5),transparent)}
-    .rv-dest-info{padding:.75rem 1rem;background:var(--surface)}
-    .rv-dest-name{font-size:1rem;font-weight:700;color:#F1F5F9;margin-bottom:.15rem}
+    .rv-dest-info{padding:.75rem 1rem;background:var(--surface-2)}
+    .rv-dest-name{font-size:1rem;font-weight:700;color:white;font-family:'Outfit',sans-serif;margin-bottom:.15rem}
     .rv-dest-vibe{font-size:.7rem;color:var(--text-muted);font-family:'Roboto', sans-serif;font-weight:400}
     .rv-dest-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:.6rem;font-weight:700;padding:.2rem .5rem;border-radius:6px;font-family:'Roboto', sans-serif;letter-spacing:.04em;text-transform:uppercase;backdrop-filter:blur(4px)}
-    .rv-beach .rv-dest-info{background:linear-gradient(135deg,#fff9e6,#fffdf5)}
-    .rv-winter .rv-dest-info{background:linear-gradient(135deg,#f0f4ff,#e8eeff)}
+    .rv-beach .rv-dest-info{background:linear-gradient(135deg,#1E293B,#273549)}
+    .rv-winter .rv-dest-info{background:linear-gradient(135deg,#1E293B,#273549)}
     .rv-city .rv-dest-info{background:linear-gradient(135deg,#0d0d14,#1a1a2e)}
-    .rv-city .rv-dest-name{color:white}
+    .rv-city .rv-dest-name{color:white;font-family:'Outfit',sans-serif}
     .rv-city .rv-dest-vibe{color:rgba(255,255,255,0.5)}
 
     /* NEON TITLE */
@@ -782,7 +777,7 @@ function injectRevealCSS() {
     /* SKIP + CTA */
     .rv-skip{position:absolute;bottom:2rem;right:2rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:.5rem 1.1rem;border-radius:50px;font-family:'Roboto', sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);z-index:20}
     .rv-skip:hover{background:rgba(255,255,255,0.15);color:#fff}
-    .rv-cta{position:absolute;bottom:3.5rem;left:50%;transform:translateX(-50%);background:var(--gradient);color:#F1F5F9;border:none;border-radius:50px;padding:.85rem 2.5rem;font-family:'Roboto', sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);opacity:0;z-index:20;box-shadow:0 8px 32px rgba(155,114,203,0.4);white-space:nowrap}
+    .rv-cta{position:absolute;bottom:3.5rem;left:50%;transform:translateX(-50%);background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 2.5rem;font-family:'Roboto', sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);opacity:0;z-index:20;box-shadow:0 8px 32px rgba(155,114,203,0.4);white-space:nowrap}
     .rv-cta.show{opacity:1;transform:translateX(-50%) translateY(0)}
     .rv-cta:hover{transform:translateX(-50%) translateY(-3px);box-shadow:0 14px 40px rgba(155,114,203,0.5)}
   `;
@@ -854,7 +849,6 @@ function buildRevealDOM() {
   }
 
   el.innerHTML = `
-    <!-- Scene 1: Rain at home -->
     <div class="rv-scene" id="rv-rain">
       <div class="rain-bg"></div>
       <div class="rain-window">
@@ -872,7 +866,6 @@ function buildRevealDOM() {
       </div>
     </div>
 
-    <!-- Scene 2: Card flip -->
     <div class="rv-flip-stage" id="rv-flip">
       <div class="rv-card" id="rv-card">
         <div class="rv-card-face rv-card-front">
@@ -890,7 +883,6 @@ function buildRevealDOM() {
       </div>
     </div>
 
-    <!-- Scene 3: Destination cards -->
     <div class="rv-destinations" id="rv-dests">
       <div class="rv-dest-card rv-beach" onclick="selectRevealDest(this)">
         <div class="rv-dest-img">
@@ -927,7 +919,6 @@ function buildRevealDOM() {
       </div>
     </div>
 
-    <!-- Scene 4: Neon city title -->
     <div class="rv-neon-stage" id="rv-neon">
       <div class="rv-neon-stars">${neonStars}</div>
       <div class="rv-laser rv-laser-2"></div>
@@ -984,7 +975,7 @@ function runRevealSequence() {
 function selectRevealDest(card) {
   document.querySelectorAll('.rv-dest-card').forEach(c => c.style.transform = '');
   card.style.transform = 'translateY(-8px) scale(1.04)';
-  card.style.boxShadow = '0 16px 40px rgba(201,168,76,0.4)';
+  card.style.boxShadow = '0 16px 40px rgba(155,114,203,0.4)';
   setTimeout(() => {
     document.getElementById('rv-dests').classList.remove('show');
     document.getElementById('rv-neon').classList.add('show');
