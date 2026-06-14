@@ -1,6 +1,7 @@
 /* =================================================================
    AeroFly — hotel.js (Living Canvas & Integrated Rooms)
 ================================================================= */
+console.log("AeroFly v2 loaded successfully!"); // Verify in console that you cleared cache
 
 /* -----------------------------------------------------------------
    DATE & GUEST PICKER
@@ -80,27 +81,39 @@ function toggleStar(el, v) { document.querySelectorAll('.star-pill').forEach(p =
 function resetFilters() { maxPriceFilter = 600; starFilter = 'all'; document.querySelector('input[type=range]').value = 600; document.getElementById('price-lbl').textContent = '$600'; document.querySelectorAll('.star-pill').forEach((p, i) => p.classList.toggle('active', i === 0)); renderHotels(); }
 
 /* -----------------------------------------------------------------
-   DETAIL MODAL & ROOMS TAB
+   DETAIL MODAL & ROOMS INJECTION
 ----------------------------------------------------------------- */
 let dmIdx = 0, dmTotal = 0, currentHotel = null;
 
 function openDetail(hid) {
   currentHotel = hotels.find(h => h.id === hid);
   if (!currentHotel) return;
+  
+  // Fill existing details
   document.getElementById('dm-name').textContent = currentHotel.name;
   document.getElementById('dm-score').textContent = currentHotel.score;
   document.getElementById('dm-score-lbl').textContent = currentHotel.scoreLbl;
   document.getElementById('dm-score-cnt').textContent = currentHotel.reviews.toLocaleString() + ' reviews';
   document.getElementById('dm-rev-score').textContent = currentHotel.score;
   document.getElementById('dbs-amount').textContent = '$' + currentHotel.price;
+  
   dmIdx = 0; dmTotal = currentHotel.imgs.length;
   document.getElementById('dm-track').innerHTML = currentHotel.imgs.map(s => `<div class="dm-slide"><img src="${s}" onerror="this.style.background='#1E293B'"></div>`).join('');
   renderDmDots(); updateDmGallery();
   
-  // Render Rooms Inside the Tab
-  const roomsContainer = document.getElementById('dtc-rooms');
-  if (roomsContainer) {
-    roomsContainer.innerHTML = mockRooms.map(r => `
+  // FORCE-INJECT ROOMS UI (so we don't rely on HTML structure)
+  let roomsContainer = document.getElementById('injected-rooms-ui');
+  if (!roomsContainer) {
+    roomsContainer = document.createElement('div');
+    roomsContainer.id = 'injected-rooms-ui';
+    roomsContainer.style.marginTop = '2rem';
+    const dmBody = document.querySelector('.dm-body');
+    if (dmBody) dmBody.appendChild(roomsContainer);
+  }
+  
+  roomsContainer.innerHTML = `
+    <h3 style="color:white; font-family:'Outfit', sans-serif; font-size:1.3rem; margin-bottom:1rem;">Select your room</h3>
+    ${mockRooms.map(r => `
       <div class="room-card">
         <div class="rc-top">
           <div class="rc-img"><img src="${r.img}"></div>
@@ -115,20 +128,19 @@ function openDetail(hid) {
           <button class="rc-btn" onclick="openElevatorFlow('${r.name}', ${r.price})">Book Room</button>
         </div>
       </div>
-    `).join('');
-  }
+    `).join('')}
+  `;
 
-  document.querySelectorAll('.dm-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
-  document.querySelectorAll('.dm-tc').forEach((c, i) => c.classList.toggle('active', i === 0));
-  
-  // Wire "Select Room" sticky button
-  const selectRoomBtn = document.querySelector('.dbs-book');
-  if (selectRoomBtn) {
-    selectRoomBtn.onclick = () => {
-      switchTab(document.querySelectorAll('.dm-tab')[1], 'rooms');
+  // Fix Main Bottom Sticky "Book Now" Button to point to rooms instead
+  const mainStickyBtn = document.querySelector('.dbs-book');
+  if (mainStickyBtn) {
+    mainStickyBtn.innerHTML = 'View Rooms ↓';
+    mainStickyBtn.onclick = (e) => {
+      e.stopPropagation();
       const body = document.querySelector('.dm-body');
-      const rc = document.getElementById('dtc-rooms');
-      if(body && rc) { body.scrollTo({ top: rc.offsetTop - 20, behavior: 'smooth' }); }
+      if (body && roomsContainer) {
+        body.scrollTo({ top: roomsContainer.offsetTop - 20, behavior: 'smooth' });
+      }
     };
   }
 
@@ -139,8 +151,6 @@ function closeDetail() { document.getElementById('detail-overlay').classList.rem
 function dmSlide(d) { dmIdx = Math.max(0, Math.min(dmTotal - 1, dmIdx + d)); updateDmGallery(); renderDmDots(); }
 function updateDmGallery() { document.getElementById('dm-track').style.transform = `translateX(${-dmIdx * 100}%)`; document.getElementById('dm-count').textContent = (dmIdx + 1) + ' / ' + dmTotal; }
 function renderDmDots() { document.getElementById('dm-dots').innerHTML = Array.from({ length: dmTotal }, (_, i) => `<div class="dm-dot${i === dmIdx ? ' active' : ''}" onclick="dmIdx=${i};updateDmGallery();renderDmDots()"></div>`).join(''); }
-function switchTab(el, id) { document.querySelectorAll('.dm-tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); document.querySelectorAll('.dm-tc').forEach(c => c.classList.remove('active')); document.getElementById('dtc-' + id).classList.add('active'); }
-function toggleDmFav() { const i = document.getElementById('dbs-fav-icon'); const b = document.getElementById('dbs-fav'); const saved = i.className.includes('regular'); i.className = saved ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; i.style.color = saved ? 'var(--red)' : ''; b.innerHTML = saved ? '<i id="dbs-fav-icon" class="fa-solid fa-heart" style="color:var(--red)"></i> Saved' : '<i id="dbs-fav-icon" class="fa-regular fa-heart"></i> Save'; }
 
 document.getElementById('detail-overlay').addEventListener('click', function(e) { if (e.target === this) closeDetail(); });
 
@@ -249,15 +259,18 @@ function injectElevatorCSS() {
     .elev-sum-row:last-child .elev-sum-val{font-family:'Outfit',sans-serif;font-size:1.1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
     .elev-footer{padding:1rem 1.5rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.75rem;flex-shrink:0}
     .elev-btn-back{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);border-radius:50px;padding:.85rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+    .elev-btn-back:hover{background:var(--border)}
     .elev-btn-next{flex:1;background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s;box-shadow:0 8px 24px rgba(155,114,203,0.3)}
+    .elev-btn-next:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(155,114,203,0.4)}
   `;
   document.head.appendChild(s);
 }
 
 function buildElevatorModal() {
-  if (document.getElementById('elev-overlay')) return;
-  const el = document.createElement('div');
-  el.id = 'elev-overlay';
+  let el = document.getElementById('elev-overlay');
+  if (!el) { el = document.createElement('div'); el.id = 'elev-overlay'; document.body.appendChild(el); }
+  
+  // Re-inject HTML so selected room updates perfectly every time
   el.innerHTML = `
     <div class="elev-modal">
       <div class="elev-shaft">
@@ -317,7 +330,6 @@ function buildElevatorModal() {
         <button class="elev-btn-next" id="elev-next" onclick="elevNext()">Next floor ↑</button>
       </div>
     </div>`;
-  document.body.appendChild(el);
   renderElevatorFloors();
 }
 
@@ -392,7 +404,6 @@ function initRevealCanvas() {
   revealCtx = revealCanvas.getContext('2d');
   offCv = document.createElement('canvas'); offCtx = offCv.getContext('2d');
   
-  // Setup Particles
   S.stars = Array.from({length:300}, () => ({ x: Math.random()*2000, y: Math.random()*1000, s: Math.random()*1.6+.25, ph: Math.random()*Math.PI*2, sp: Math.random()*.04+.008 }));
   S.clouds = Array.from({length:8}, () => ({ x: Math.random()*2000, y: 48+Math.random()*90, spd: .08+Math.random()*.14, a: .35+Math.random()*.45, puffs: Array.from({length:5}, () => ({ dx:(Math.random()-.5)*60, dy:(Math.random()-.5)*20, rx:20+Math.random()*30, ry:12+Math.random()*20 })) }));
   S.auroraBands = Array.from({length:6}, (_,i)=>({ cx:100+i*150, w:80+Math.random()*80, ph:Math.random()*Math.PI*2, sp:.0006+Math.random()*.0004, colIdx:i%3 }));
@@ -417,7 +428,6 @@ function triggerThemeChange(newTheme) {
   S.theme = newTheme; S.currentThemeKey = newTheme;
 }
 
-// Fullscreen Canvas Drawing Functions ported from Living Watch
 function dSky(ctx, th, W, H) { const g = ctx.createLinearGradient(0,0,0,H); th.sky.forEach((c,i)=>g.addColorStop(i/(th.sky.length-1),c)); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
 function dAurora(ctx, th, t, W) { if(!th.aurora) return; ctx.save(); ctx.globalCompositeOperation='screen'; const cols=th.auroraCols; S.auroraBands.forEach((b,i)=>{ const wave=Math.sin(t*b.sp+b.ph); const ox=wave*150; const g=ctx.createLinearGradient(0,20,0,400); const a=(0.2+Math.abs(wave)*0.15)/(i+1); const col=cols[b.colIdx]; g.addColorStop(0,col+',0)'); g.addColorStop(0.4,col+`,${a})`); g.addColorStop(1,col+',0)'); ctx.beginPath(); ctx.moveTo(b.cx+ox-b.w, 20); ctx.bezierCurveTo(b.cx+ox, -10, b.cx+ox+b.w, 20, b.cx+ox+b.w, 400); ctx.lineTo(b.cx+ox-b.w, 400); ctx.closePath(); ctx.fillStyle=g; ctx.filter='blur(20px)'; ctx.fill(); }); ctx.restore(); }
 function dStars(ctx, th, t, W, H) { const op=th.stars||0; if(op<=0) return; S.stars.forEach((st)=>{ if(st.y > H*0.6) return; st.ph+=st.sp; const a=(.4+Math.sin(st.ph)*.5)*op; ctx.beginPath(); ctx.arc(st.x%(W+20), st.y, st.s, 0, Math.PI*2); ctx.fillStyle=`rgba(255,255,245,${a})`; ctx.fill(); }); }
@@ -439,18 +449,10 @@ function renderCanvas(ts) {
   const th = T[S.theme];
 
   revealCtx.clearRect(0,0,W,H);
-  dSky(revealCtx, th, W, H);
-  dAurora(revealCtx, th, ts, W);
-  dStars(revealCtx, th, ts, W, H);
-  dSun(revealCtx, th, W, H);
-  dMoon(revealCtx, th, W, H);
-  dClouds(revealCtx, th, ts, W);
-  dRain(revealCtx, th, ts, W, H);
-  dLightning(revealCtx, th, ts, W, H);
-  dMountains(revealCtx, th, W, H);
-  dCity(revealCtx, th, ts, W, H);
-  dGround(revealCtx, th, W, H);
-  dWater(revealCtx, th, ts, W, H);
+  dSky(revealCtx, th, W, H); dAurora(revealCtx, th, ts, W); dStars(revealCtx, th, ts, W, H);
+  dSun(revealCtx, th, W, H); dMoon(revealCtx, th, W, H); dClouds(revealCtx, th, ts, W);
+  dRain(revealCtx, th, ts, W, H); dLightning(revealCtx, th, ts, W, H); dMountains(revealCtx, th, W, H);
+  dCity(revealCtx, th, ts, W, H); dGround(revealCtx, th, W, H); dWater(revealCtx, th, ts, W, H);
 
   // Crossfade logic
   if (transitionAlpha > 0) {
@@ -506,11 +508,11 @@ function injectRevealCSS() {
     .rv-dest-vibe{font-size:.7rem;color:var(--text-muted);}
     .rv-dest-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:.6rem;font-weight:700;padding:.2rem .5rem;border-radius:6px;backdrop-filter:blur(4px);text-transform:uppercase;}
 
-    .rv-neon-title{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;opacity:0;transition:opacity .8s;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;}
+    .rv-neon-title{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:10;opacity:0;transition:opacity .8s;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;pointer-events:none;}
     .rv-neon-title.show{opacity:1;}
-    .rv-neon-title .line1{display:block;color:white;}
+    .rv-neon-title .line1{display:block;color:white;text-shadow:0 0 20px rgba(0,0,0,0.5);}
     .rv-neon-title .line2{display:block;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .rv-cta{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 2.5rem;font-size:1rem;font-weight:700;cursor:pointer;opacity:0;transition:all .3s;z-index:20;}
+    .rv-cta{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);background:var(--gradient);color:white;border:none;border-radius:50px;padding:.85rem 2.5rem;font-size:1rem;font-weight:700;cursor:pointer;opacity:0;transition:all .3s;z-index:20;box-shadow:0 8px 32px rgba(155,114,203,0.4);}
     .rv-cta.show{opacity:1;}
     .rv-cta:hover{transform:translateX(-50%) translateY(-3px);box-shadow:0 14px 40px rgba(155,114,203,0.5)}
     .rv-skip{position:absolute;bottom:2rem;right:2rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:white;padding:.5rem 1.1rem;border-radius:50px;font-size:.8rem;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);z-index:20}
