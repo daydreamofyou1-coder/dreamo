@@ -124,7 +124,7 @@ header {
   border: 1px solid var(--border);
   border-radius: 16px;
   box-shadow: var(--shadow-md);
-  display: flex;
+  display: none;
   flex-direction: column;
   min-width: 210px;
   opacity: 0;
@@ -132,8 +132,10 @@ header {
   pointer-events: none;
   transition: all .25s cubic-bezier(.34,1.56,.64,1);
   overflow: hidden;
+  z-index: 500;
 }
 .nav-dropdown.active {
+  display: flex;
   opacity: 1;
   transform: translateY(0);
   pointer-events: all;
