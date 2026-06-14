@@ -193,7 +193,7 @@ function renderHotels() {
   document.getElementById('hotels-list').innerHTML = filtered.map(h => `
     <div class="hotel-card${h.featured ? ' featured-card' : ''}" onclick="openDetail('${h.id}')">
       <div class="hc-img">
-        <img src="${h.imgs[0]}" alt="${h.name}" onerror="this.style.background='#E8E0D0'">
+        <img src="${h.imgs[0]}" alt="${h.name}" onerror="this.style.background='#1E293B'">
         ${h.featured
           ? '<div class="hc-badge gold">✦ Featured</div>'
           : '<div class="hc-badge">Singapore</div>'}
@@ -229,7 +229,7 @@ function renderHotels() {
         </div>
       </div>
     </div>`).join('') ||
-    '<div style="text-align:center;padding:3rem;color:var(--mist);">No hotels match your filters.</div>';
+    '<div style="text-align:center;padding:3rem;color:var(--text-muted);">No hotels match your filters.</div>';
 }
 
 function setSort(el, type) {
@@ -278,7 +278,7 @@ function openDetail(hid) {
   document.getElementById('dbs-amount').textContent   = '$' + currentHotel.price;
   dmIdx = 0; dmTotal = currentHotel.imgs.length;
   document.getElementById('dm-track').innerHTML = currentHotel.imgs
-    .map(s => `<div class="dm-slide"><img src="${s}" alt="${currentHotel.name}" onerror="this.style.background='#1E1A14'"></div>`)
+    .map(s => `<div class="dm-slide"><img src="${s}" alt="${currentHotel.name}" onerror="this.style.background='#1E293B'"></div>`)
     .join('');
   renderDmDots(); updateDmGallery();
   document.querySelectorAll('.dm-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
@@ -392,81 +392,81 @@ function injectElevatorCSS() {
   s.textContent = `
     #elev-overlay{position:fixed;inset:0;background:rgba(13,13,13,0.75);backdrop-filter:blur(6px);z-index:950;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;justify-content:center;align-items:center;padding:1rem}
     #elev-overlay.active{opacity:1;pointer-events:all}
-    .elev-modal{background:var(--cream);border-radius:24px;width:100%;max-width:520px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(24px);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 30px 80px rgba(0,0,0,0.3)}
+    .elev-modal{background:var(--surface);border:1px solid var(--border);border-radius:24px;width:100%;max-width:520px;max-height:92vh;overflow:hidden;display:flex;flex-direction:column;transform:translateY(24px);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 30px 80px rgba(0,0,0,0.5)}
     #elev-overlay.active .elev-modal{transform:translateY(0)}
-    .elev-shaft{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;background:var(--ink);border-radius:24px 24px 0 0;position:relative;overflow:hidden}
+    .elev-shaft{display:flex;align-items:center;gap:1rem;padding:1.2rem 1.5rem;background:#F1F5F9;border-radius:24px 24px 0 0;position:relative;overflow:hidden}
     .elev-shaft::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,0.03) 40px,rgba(255,255,255,0.03) 41px);pointer-events:none}
-    .elev-car{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 4px 12px rgba(201,168,76,0.4);transition:transform .5s cubic-bezier(0.34,1.56,0.64,1)}
+    .elev-car{width:44px;height:44px;background:var(--gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;box-shadow:0 4px 12px rgba(201,168,76,0.4);transition:transform .5s cubic-bezier(0.34,1.56,0.64,1)}
     .elev-car.going-up{animation:elevGo .5s cubic-bezier(0.34,1.56,0.64,1)}
     @keyframes elevGo{0%{transform:translateY(12px) scale(.9)}60%{transform:translateY(-6px) scale(1.05)}100%{transform:translateY(0) scale(1)}}
     .elev-floors{display:flex;flex-direction:column;gap:3px;flex:1}
     .elev-floor-row{display:flex;align-items:center;gap:.5rem}
-    .elev-floor-num{font-size:.6rem;font-weight:700;color:rgba(255,255,255,0.4);width:16px;text-align:right;font-family:var(--ff-display)}
+    .elev-floor-num{font-size:.6rem;font-weight:700;color:rgba(255,255,255,0.4);width:16px;text-align:right;font-family:'Outfit', sans-serif}
     .elev-floor-bar{flex:1;height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;transition:background .3s}
-    .elev-floor-bar.active{background:linear-gradient(90deg,var(--gold),var(--gold2))}
-    .elev-floor-bar.done{background:rgba(201,168,76,0.4)}
-    .elev-floor-label{font-size:.62rem;color:rgba(255,255,255,0.5);font-family:var(--ff-body);white-space:nowrap;transition:color .3s}
-    .elev-floor-label.active{color:var(--gold2);font-weight:600}
+    .elev-floor-bar.active{background:var(--gradient)}
+    .elev-floor-bar.done{background:rgba(155,114,203,0.3)}
+    .elev-floor-label{font-size:.62rem;color:rgba(255,255,255,0.5);font-family:'Roboto', sans-serif;white-space:nowrap;transition:color .3s}
+    .elev-floor-label.active{color:var(--purple);font-weight:600}
     .elev-close{background:rgba(255,255,255,0.1);border:none;color:rgba(255,255,255,0.6);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0}
     .elev-close:hover{background:rgba(255,255,255,0.2);color:#fff}
     .elev-body{overflow-y:auto;flex:1;padding:1.5rem}
     .elev-body::-webkit-scrollbar{width:4px}
-    .elev-body::-webkit-scrollbar-thumb{background:var(--bc);border-radius:2px}
+    .elev-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
     .elev-panel{display:none;animation:elevIn .3s cubic-bezier(0.34,1.56,0.64,1)}
     .elev-panel.active{display:block}
     @keyframes elevIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-    .elev-section-title{font-family:var(--ff-display);font-size:1.3rem;font-weight:600;color:var(--ink);margin-bottom:1.2rem}
+    .elev-section-title{font-family:'Outfit', sans-serif;font-size:1.3rem;font-weight:600;color:#F1F5F9;margin-bottom:1.2rem}
     .elev-date-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem}
-    .elev-date-box{border:2px solid var(--bc);border-radius:14px;padding:1rem;cursor:pointer;transition:all .2s;background:var(--wh);text-align:center}
-    .elev-date-box:hover,.elev-date-box.active{border-color:var(--gold);box-shadow:0 4px 16px rgba(201,168,76,0.2)}
-    .elev-date-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mist);margin-bottom:.3rem}
-    .elev-date-val{font-family:var(--ff-display);font-size:1.2rem;font-weight:600;color:var(--ink)}
-    .elev-nights-badge{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;margin-bottom:1rem}
+    .elev-date-box{border:2px solid var(--border);border-radius:14px;padding:1rem;cursor:pointer;transition:all .2s;background:var(--surface);text-align:center}
+    .elev-date-box:hover,.elev-date-box.active{border-color:var(--purple);box-shadow:0 4px 16px rgba(201,168,76,0.2)}
+    .elev-date-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:.3rem}
+    .elev-date-val{font-family:'Outfit', sans-serif;font-size:1.2rem;font-weight:600;color:#F1F5F9}
+    .elev-nights-badge{display:inline-block;background:var(--gradient);color:#F1F5F9;font-size:.75rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;margin-bottom:1rem}
     .elev-room-list{display:flex;flex-direction:column;gap:.7rem}
-    .elev-room-opt{border:2px solid var(--bc);border-radius:16px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s;background:var(--wh);display:flex;align-items:center;gap:1rem}
-    .elev-room-opt:hover{border-color:var(--gold);transform:translateY(-1px)}
-    .elev-room-opt.active{border-color:var(--gold);background:rgba(201,168,76,0.06);box-shadow:0 4px 16px rgba(201,168,76,0.2)}
-    .elev-room-icon{width:46px;height:46px;border-radius:12px;background:var(--dust);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
-    .elev-room-name{font-family:var(--ff-display);font-size:1rem;font-weight:600;margin-bottom:.2rem}
-    .elev-room-feats{font-size:.72rem;color:var(--mist)}
-    .elev-room-price{font-family:var(--ff-display);font-size:1.1rem;font-weight:700;color:var(--ink);margin-left:auto;flex-shrink:0}
-    .elev-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--bc);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-    .elev-room-opt.active .elev-radio{border-color:var(--gold);background:var(--gold)}
-    .elev-room-opt.active .elev-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:var(--ink)}
+    .elev-room-opt{border:2px solid var(--border);border-radius:16px;padding:1rem 1.2rem;cursor:pointer;transition:all .2s;background:var(--surface);display:flex;align-items:center;gap:1rem}
+    .elev-room-opt:hover{border-color:var(--purple);transform:translateY(-1px)}
+    .elev-room-opt.active{border-color:var(--purple);background:rgba(201,168,76,0.06);box-shadow:0 4px 16px rgba(201,168,76,0.2)}
+    .elev-room-icon{width:46px;height:46px;border-radius:12px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+    .elev-room-name{font-family:'Outfit', sans-serif;font-size:1rem;font-weight:600;margin-bottom:.2rem}
+    .elev-room-feats{font-size:.72rem;color:var(--text-muted)}
+    .elev-room-price{font-family:'Outfit', sans-serif;font-size:1.1rem;font-weight:700;color:#F1F5F9;margin-left:auto;flex-shrink:0}
+    .elev-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .elev-room-opt.active .elev-radio{border-color:var(--purple);background:var(--purple)}
+    .elev-room-opt.active .elev-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#F1F5F9}
     .elev-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
     .elev-field{display:flex;flex-direction:column;gap:.3rem}
     .elev-field.full{grid-column:1/-1}
-    .elev-field label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mist)}
-    .elev-field input,.elev-field select{border:1.5px solid var(--bc);border-radius:10px;padding:.65rem .9rem;font-family:var(--ff-body);font-size:.9rem;color:var(--ink);background:var(--wh);outline:none;transition:all .2s}
-    .elev-field input:focus,.elev-field select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,0.12)}
+    .elev-field label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted)}
+    .elev-field input,.elev-field select{border:1.5px solid var(--border);border-radius:10px;padding:.65rem .9rem;font-family:'Roboto', sans-serif;font-size:.9rem;color:#F1F5F9;background:var(--bg);outline:none;transition:all .2s}
+    .elev-field input:focus,.elev-field select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(155,114,203,0.15)}
     .elev-field input.filled{border-color:rgba(34,160,90,0.5);background:rgba(34,160,90,0.04)}
-    .elev-autofill{display:flex;align-items:center;gap:.4rem;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:#8B6A1F;border-radius:20px;padding:.35rem .9rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--ff-body);transition:all .2s;margin-bottom:1rem}
-    .elev-autofill:hover{background:rgba(201,168,76,0.2)}
+    .elev-autofill{display:flex;align-items:center;gap:.4rem;background:rgba(155,114,203,0.1);border:1px solid rgba(155,114,203,0.3);color:#c4b5fd;border-radius:20px;padding:.35rem .9rem;font-size:.8rem;font-weight:600;cursor:pointer;font-family:'Roboto', sans-serif;transition:all .2s;margin-bottom:1rem}
+    .elev-autofill:hover{background:rgba(155,114,203,0.2)}
     .elev-extra-grid{display:flex;flex-direction:column;gap:.6rem}
-    .elev-extra{border:2px solid var(--bc);border-radius:14px;padding:.9rem 1rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:all .2s;background:var(--wh)}
-    .elev-extra:hover{border-color:var(--gold)}
-    .elev-extra.active{border-color:var(--gold);background:rgba(201,168,76,0.05)}
+    .elev-extra{border:2px solid var(--border);border-radius:14px;padding:.9rem 1rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:all .2s;background:var(--surface)}
+    .elev-extra:hover{border-color:var(--purple)}
+    .elev-extra.active{border-color:var(--purple);background:rgba(155,114,203,0.08)}
     .elev-extra-icon{font-size:1.2rem;flex-shrink:0}
-    .elev-extra-name{font-weight:600;font-size:.9rem;font-family:var(--ff-display)}
-    .elev-extra-desc{font-size:.73rem;color:var(--mist)}
-    .elev-extra-price{margin-left:auto;font-weight:700;font-family:var(--ff-display);color:var(--ink);flex-shrink:0}
-    .elev-chk{width:20px;height:20px;border-radius:6px;border:2px solid var(--bc);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .2s}
-    .elev-extra.active .elev-chk{background:var(--gold);border-color:var(--gold);color:var(--ink)}
-    .elev-summary{background:var(--wh);border:1px solid var(--bc);border-radius:16px;padding:1.2rem;margin-bottom:1rem}
-    .elev-sum-hotel{display:flex;align-items:center;gap:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--bc);margin-bottom:.9rem}
+    .elev-extra-name{font-weight:600;font-size:.9rem;font-family:'Outfit', sans-serif}
+    .elev-extra-desc{font-size:.73rem;color:var(--text-muted)}
+    .elev-extra-price{margin-left:auto;font-weight:700;font-family:'Outfit', sans-serif;color:#F1F5F9;flex-shrink:0}
+    .elev-chk{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .2s}
+    .elev-extra.active .elev-chk{background:var(--purple);border-color:var(--purple);color:#F1F5F9}
+    .elev-summary{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:1.2rem;margin-bottom:1rem}
+    .elev-sum-hotel{display:flex;align-items:center;gap:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--border);margin-bottom:.9rem}
     .elev-sum-img{width:64px;height:50px;border-radius:10px;overflow:hidden;flex-shrink:0}
     .elev-sum-img img{width:100%;height:100%;object-fit:cover}
-    .elev-sum-name{font-family:var(--ff-display);font-size:1rem;font-weight:600}
-    .elev-sum-loc{font-size:.73rem;color:var(--mist);margin-top:.15rem}
-    .elev-sum-row{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;padding:.3rem 0;border-bottom:1px dashed var(--bc)}
+    .elev-sum-name{font-family:'Outfit', sans-serif;font-size:1rem;font-weight:600}
+    .elev-sum-loc{font-size:.73rem;color:var(--text-muted);margin-top:.15rem}
+    .elev-sum-row{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;padding:.3rem 0;border-bottom:1px dashed var(--border)}
     .elev-sum-row:last-child{border-bottom:none;font-weight:700;font-size:.95rem;padding-top:.5rem}
-    .elev-sum-lbl{color:var(--mist)}
-    .elev-sum-val{color:var(--ink);font-weight:500}
-    .elev-sum-row:last-child .elev-sum-val{font-family:var(--ff-display);font-size:1.1rem;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .elev-footer{padding:1rem 1.5rem 1.5rem;border-top:1px solid var(--bc);display:flex;gap:.75rem;flex-shrink:0}
-    .elev-btn-back{background:var(--dust);border:1px solid var(--bc);color:var(--slate);border-radius:50px;padding:.85rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:var(--ff-body);transition:all .2s}
-    .elev-btn-back:hover{background:var(--bc)}
-    .elev-btn-next{flex:1;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:var(--ff-body);transition:all .2s;box-shadow:0 8px 24px rgba(201,168,76,0.3)}
+    .elev-sum-lbl{color:var(--text-muted)}
+    .elev-sum-val{color:#F1F5F9;font-weight:500}
+    .elev-sum-row:last-child .elev-sum-val{font-family:'Outfit', sans-serif;font-size:1.1rem;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-family:'Outfit',sans-serif}
+    .elev-footer{padding:1rem 1.5rem 1.5rem;border-top:1px solid var(--border);display:flex;gap:.75rem;flex-shrink:0}
+    .elev-btn-back{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted);border-radius:50px;padding:.85rem 1.4rem;font-size:.9rem;font-weight:600;cursor:pointer;font-family:'Roboto', sans-serif;transition:all .2s}
+    .elev-btn-back:hover{background:var(--border)}
+    .elev-btn-next{flex:1;background:var(--gradient);color:#F1F5F9;border:none;border-radius:50px;padding:.85rem 1.5rem;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Roboto', sans-serif;transition:all .2s;box-shadow:0 8px 24px rgba(201,168,76,0.3)}
     .elev-btn-next:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,168,76,0.4)}
   `;
   document.head.appendChild(s);
@@ -492,7 +492,7 @@ function buildElevatorModal() {
             <div class="elev-date-box"><div class="elev-date-lbl">Check-out</div><div class="elev-date-val" id="elev-cout">25 May</div></div>
           </div>
           <div class="elev-nights-badge">✦ 11 nights selected</div>
-          <p style="font-size:.82rem;color:var(--mist);line-height:1.6;">Dates are pre-filled from your search. Adjust them above or continue to choose your room.</p>
+          <p style="font-size:.82rem;color:var(--text-muted);line-height:1.6;">Dates are pre-filled from your search. Adjust them above or continue to choose your room.</p>
         </div>
         <!-- Floor 2: Room -->
         <div class="elev-panel" id="ep-2">
@@ -634,7 +634,7 @@ function buildElevSummary() {
   const total = (roomPrice * 11) + extrasTotal;
   box.innerHTML = `
     <div class="elev-sum-hotel">
-      <div class="elev-sum-img"><img src="${currentHotel.imgs[0]}" alt="${currentHotel.name}" onerror="this.style.background='#E8E0D0'"></div>
+      <div class="elev-sum-img"><img src="${currentHotel.imgs[0]}" alt="${currentHotel.name}" onerror="this.style.background='#1E293B'"></div>
       <div><div class="elev-sum-name">${currentHotel.name}</div><div class="elev-sum-loc">${currentHotel.loc}</div></div>
     </div>
     <div class="elev-sum-row"><span class="elev-sum-lbl">Guest</span><span class="elev-sum-val">${(fname + ' ' + lname).trim()}</span></div>
@@ -696,14 +696,14 @@ function injectRevealCSS() {
   const s = document.createElement('style');
   s.id = 'reveal-style';
   s.textContent = `
-    #reveal-overlay{position:fixed;inset:0;z-index:1000;background:#0A0A0F;opacity:0;pointer-events:none;transition:opacity .5s;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;font-family:var(--ff-display)}
+    #reveal-overlay{position:fixed;inset:0;z-index:1000;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .5s;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;font-family:'Outfit', sans-serif}
     #reveal-overlay.active{opacity:1;pointer-events:all}
 
     /* RAIN SCENE */
     .rv-scene{position:absolute;inset:0;opacity:0;transition:opacity .8s}
     .rv-scene.show{opacity:1}
-    .rain-bg{position:absolute;inset:0;background:linear-gradient(180deg,#1a1f2e 0%,#2d3547 60%,#1e2535 100%)}
-    .rain-window{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:220px;background:linear-gradient(180deg,#162035,#1e2d45);border-radius:12px;border:2px solid rgba(255,255,255,0.08);overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.6)}
+    .rain-bg{position:absolute;inset:0;background:var(--bg)}
+    .rain-window{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;height:220px;background:var(--surface);border-radius:12px;border:2px solid rgba(255,255,255,0.08);overflow:hidden;box-shadow:0 0 60px rgba(0,0,0,0.6)}
     .rain-drops{position:absolute;inset:0;pointer-events:none}
     .rain-drop{position:absolute;width:1px;background:linear-gradient(to bottom,transparent,rgba(174,214,241,0.6));border-radius:1px;animation:rainFall linear infinite}
     @keyframes rainFall{0%{transform:translateY(-100px) scaleY(0)}20%{transform:translateY(-100px) scaleY(1)}100%{transform:translateY(300px) scaleY(1)}}
@@ -717,7 +717,7 @@ function injectRevealCSS() {
     .puddle-2{left:180px;width:28px;height:6px;animation-delay:.7s}
     .puddle-3{left:250px;width:34px;height:7px;animation-delay:1.3s}
     @keyframes puddle{0%,100%{transform:scaleX(1)}50%{transform:scaleX(1.15)}}
-    .rain-text{position:absolute;top:24px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.45);font-family:var(--ff-body);font-size:.78rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase}
+    .rain-text{position:absolute;top:24px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.45);font-family:'Roboto', sans-serif;font-size:.78rem;font-weight:400;letter-spacing:.08em;text-transform:uppercase}
     .rain-home-label{position:absolute;bottom:82px;left:0;right:0;text-align:center;color:rgba(255,255,255,0.25);font-size:1.8rem;font-weight:600;letter-spacing:-.01em}
     .rain-city{position:absolute;top:50px;left:0;right:0;display:flex;justify-content:center;gap:6px;align-items:flex-end;height:80px}
     .rain-bldg{background:rgba(255,255,255,0.08);border-radius:3px 3px 0 0;flex-shrink:0}
@@ -730,12 +730,12 @@ function injectRevealCSS() {
     .rv-card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 1.2s cubic-bezier(0.645,0.045,0.355,1.000)}
     .rv-card.flipped{transform:rotateY(180deg)}
     .rv-card-face{position:absolute;inset:0;border-radius:20px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;overflow:hidden}
-    .rv-card-front{background:linear-gradient(135deg,#1a2535,#2d3a4f);border:1px solid rgba(255,255,255,0.1)}
-    .rv-card-back{background:linear-gradient(135deg,var(--gold),var(--gold2));transform:rotateY(180deg);border:1px solid rgba(201,168,76,0.3)}
-    .rv-card-front-content{text-align:center;color:rgba(255,255,255,0.6)}
+    .rv-card-front{background:var(--surface-2);border:1px solid var(--border)}
+    .rv-card-back{background:var(--gradient);transform:rotateY(180deg);border:1px solid rgba(201,168,76,0.3)}
+    .rv-card-front-content{text-align:center;color:rgba(255,255,255,0.6);font-family:'Roboto',sans-serif}
     .rv-card-front-content i{font-size:2rem;display:block;margin-bottom:.5rem}
     .rv-card-front-content span{font-size:.85rem;font-weight:400;letter-spacing:.05em;text-transform:uppercase}
-    .rv-card-back-content{text-align:center;color:var(--ink)}
+    .rv-card-back-content{text-align:center;color:#F1F5F9}
     .rv-card-back-content i{font-size:2.5rem;display:block;margin-bottom:.4rem}
     .rv-card-back-content span{font-size:1.1rem;font-weight:700;letter-spacing:.03em}
 
@@ -747,14 +747,14 @@ function injectRevealCSS() {
     .rv-dest-img{height:130px;position:relative;overflow:hidden}
     .rv-dest-img-bg{width:100%;height:100%;object-fit:cover}
     .rv-dest-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.5),transparent)}
-    .rv-dest-info{padding:.75rem 1rem;background:var(--wh)}
-    .rv-dest-name{font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.15rem}
-    .rv-dest-vibe{font-size:.7rem;color:var(--mist);font-family:var(--ff-body);font-weight:400}
-    .rv-dest-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:.6rem;font-weight:700;padding:.2rem .5rem;border-radius:6px;font-family:var(--ff-body);letter-spacing:.04em;text-transform:uppercase;backdrop-filter:blur(4px)}
+    .rv-dest-info{padding:.75rem 1rem;background:var(--surface)}
+    .rv-dest-name{font-size:1rem;font-weight:700;color:#F1F5F9;margin-bottom:.15rem}
+    .rv-dest-vibe{font-size:.7rem;color:var(--text-muted);font-family:'Roboto', sans-serif;font-weight:400}
+    .rv-dest-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.55);color:#fff;font-size:.6rem;font-weight:700;padding:.2rem .5rem;border-radius:6px;font-family:'Roboto', sans-serif;letter-spacing:.04em;text-transform:uppercase;backdrop-filter:blur(4px)}
     .rv-beach .rv-dest-info{background:linear-gradient(135deg,#fff9e6,#fffdf5)}
     .rv-winter .rv-dest-info{background:linear-gradient(135deg,#f0f4ff,#e8eeff)}
     .rv-city .rv-dest-info{background:linear-gradient(135deg,#0d0d14,#1a1a2e)}
-    .rv-city .rv-dest-name{color:#fff}
+    .rv-city .rv-dest-name{color:white}
     .rv-city .rv-dest-vibe{color:rgba(255,255,255,0.5)}
 
     /* NEON TITLE */
@@ -765,11 +765,11 @@ function injectRevealCSS() {
     .rv-neon-bldg::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:inherit;filter:blur(6px);opacity:.4;z-index:-1;border-radius:inherit}
     .rv-neon-bldg-win{position:absolute;width:3px;height:3px;border-radius:1px;animation:neonWin 2s ease-in-out infinite}
     @keyframes neonWin{0%,100%{opacity:.8}50%{opacity:.3}}
-    .rv-neon-title{font-family:var(--ff-display);font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;text-align:center;letter-spacing:.04em;line-height:1;margin-bottom:.5rem;opacity:0;transform:scale(.8);transition:all .8s cubic-bezier(0.34,1.56,0.64,1);position:relative;z-index:10}
+    .rv-neon-title{font-family:'Outfit', sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;text-align:center;letter-spacing:.04em;line-height:1;margin-bottom:.5rem;opacity:0;transform:scale(.8);transition:all .8s cubic-bezier(0.34,1.56,0.64,1);position:relative;z-index:10}
     .rv-neon-title.show{opacity:1;transform:scale(1)}
     .rv-neon-title .line1{display:block;background:linear-gradient(90deg,#ff6ee7,#c344ff,#6b8eff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;filter:drop-shadow(0 0 20px rgba(195,68,255,0.6))}
     .rv-neon-title .line2{display:block;background:linear-gradient(90deg,#fff7a0,#ffd700,#ff9500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 20px rgba(255,200,0,0.7))}
-    .rv-neon-subtitle{font-family:var(--ff-body);font-size:.9rem;color:rgba(255,255,255,0.4);letter-spacing:.15em;text-transform:uppercase;opacity:0;transition:opacity .6s .4s;position:relative;z-index:10}
+    .rv-neon-subtitle{font-family:'Roboto', sans-serif;font-size:.9rem;color:rgba(255,255,255,0.4);letter-spacing:.15em;text-transform:uppercase;opacity:0;transition:opacity .6s .4s;position:relative;z-index:10}
     .rv-neon-subtitle.show{opacity:1}
     .rv-neon-stars{position:absolute;inset:0;pointer-events:none;overflow:hidden}
     .rv-neon-star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;animation:neonStar 3s ease-in-out infinite}
@@ -780,11 +780,11 @@ function injectRevealCSS() {
     @keyframes laserSweep2{0%{right:-200px;left:auto;top:60%}100%{right:100%;left:auto;top:25%}}
 
     /* SKIP + CTA */
-    .rv-skip{position:absolute;bottom:2rem;right:2rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:.5rem 1.1rem;border-radius:50px;font-family:var(--ff-body);font-size:.8rem;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);z-index:20}
+    .rv-skip{position:absolute;bottom:2rem;right:2rem;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.6);padding:.5rem 1.1rem;border-radius:50px;font-family:'Roboto', sans-serif;font-size:.8rem;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px);z-index:20}
     .rv-skip:hover{background:rgba(255,255,255,0.15);color:#fff}
-    .rv-cta{position:absolute;bottom:3.5rem;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);border:none;border-radius:50px;padding:.85rem 2.5rem;font-family:var(--ff-body);font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);opacity:0;z-index:20;box-shadow:0 8px 32px rgba(201,168,76,0.4);white-space:nowrap}
+    .rv-cta{position:absolute;bottom:3.5rem;left:50%;transform:translateX(-50%);background:var(--gradient);color:#F1F5F9;border:none;border-radius:50px;padding:.85rem 2.5rem;font-family:'Roboto', sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s cubic-bezier(0.34,1.56,0.64,1);opacity:0;z-index:20;box-shadow:0 8px 32px rgba(155,114,203,0.4);white-space:nowrap}
     .rv-cta.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .rv-cta:hover{transform:translateX(-50%) translateY(-3px);box-shadow:0 14px 40px rgba(201,168,76,0.5)}
+    .rv-cta:hover{transform:translateX(-50%) translateY(-3px);box-shadow:0 14px 40px rgba(155,114,203,0.5)}
   `;
   document.head.appendChild(s);
 }
@@ -1017,77 +1017,3 @@ document.addEventListener('click', e => {
 renderHotels();
 window.addEventListener('load', () => { initMap(); });
 setTimeout(initMap, 100);
-
-/* -----------------------------------------------------------------
-   URL PARAMETER PARSING (The Bridge from Index)
------------------------------------------------------------------ */
-function initHotelsFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  if (!params.has('dest')) return; // If no search params, skip and use defaults
-
-  const dest = params.get('dest');
-  const checkin = params.get('checkin');
-  const checkout = params.get('checkout');
-  const guestsStr = params.get('guests');
-  const roomsStr = params.get('rooms');
-
-  // 1. Update Destination
-  const destField = document.getElementById('sb-dest-val');
-  if (destField) destField.textContent = dest;
-
-  // 2. Format and Update Dates
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '';
-    const d = new Date(dateStr);
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return `${d.getDate()} ${months[d.getMonth()]}`;
-  };
-  if (checkin && checkout) {
-     document.getElementById('sb-dates-val').textContent = `${formatDate(checkin)} – ${formatDate(checkout)}`;
-  }
-
-  // 3. Update Guests & Rooms
-  if (guestsStr && roomsStr) {
-     document.getElementById('sb-guests-val').textContent = `${guestsStr} · ${roomsStr}`;
-  }
-}
-
-// Run this immediately on load
-initHotelsFromURL();
-
-/* -----------------------------------------------------------------
-   SEARCH BUTTON — re-search from results page
------------------------------------------------------------------ */
-(function wireHotelSearchBtn() {
-  const btn = document.querySelector('.sb-search-btn');
-  if (!btn) return;
-  btn.addEventListener('click', function () {
-    const destEl    = document.getElementById('sb-dest-val');
-    const datesEl   = document.getElementById('sb-dates-val');
-    const guestsEl  = document.getElementById('sb-guests-val');
-
-    const dest      = destEl   ? destEl.textContent.trim()   : '';
-    const datesText = datesEl  ? datesEl.textContent.trim()  : '';
-    const guestText = guestsEl ? guestsEl.textContent.trim() : '';
-
-    // Try to pass ISO dates from dpStart/dpEnd if available
-    let checkin = '', checkout = '';
-    if (typeof dpStart !== 'undefined' && dpStart) checkin  = dpStart.toISOString().slice(0, 10);
-    if (typeof dpEnd   !== 'undefined' && dpEnd)   checkout = dpEnd.toISOString().slice(0, 10);
-
-    const parts   = guestText.split('·');
-    const guests  = (parts[0] || '2 guests').trim();
-    const rooms   = (parts[1] || '1 room').trim();
-
-    const params = new URLSearchParams({ dest, checkin, checkout, guests, rooms });
-    window.location.href = `aerohotel.html?${params}`;
-  });
-
-  // Make destination field inline-editable
-  const destField = document.getElementById('sb-dest-val');
-  if (destField) {
-    destField.setAttribute('contenteditable', 'true');
-    destField.style.outline = 'none';
-    destField.style.cursor  = 'text';
-  }
-})();
